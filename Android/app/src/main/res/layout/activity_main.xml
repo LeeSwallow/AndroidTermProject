@@ -5,15 +5,111 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="감정 분류 테스트"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/modelLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="모델 선택:"
+        android:textSize="16sp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/modelSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="@id/modelLabel"
+        app:layout_constraintBottom_toBottomOf="@id/modelLabel"
+        app:layout_constraintStart_toEndOf="@id/modelLabel"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/inputLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="텍스트 입력:"
+        android:textSize="16sp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/modelLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/inputText"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/edit_text"
+        android:gravity="top|start"
+        android:hint="분류할 텍스트를 입력하세요..."
+        android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/inputLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/classifyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="감정 분류 실행"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/inputText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/resultLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="분류 결과:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/classifyButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/editbox_background"
+        android:padding="12dp"
+        android:text="결과가 여기에 표시됩니다."
+        android:textSize="14sp"
+        android:minHeight="80dp"
+        app:layout_constraintTop_toBottomOf="@id/resultLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/inferenceTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="추론 시간: -"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/resultText"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
