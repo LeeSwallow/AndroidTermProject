@@ -1,5 +1,6 @@
 import de.undercouch.gradle.tasks.download.Download
 import org.gradle.kotlin.dsl.register
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -18,14 +19,23 @@ android {
     namespace = "com.pnu.aidbtdiary"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.pnu.aidbtdiary"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        properties.load(file("env.properties").inputStream())
+
+        buildConfigField("String", "OPENAI_BASE_URL", "https://api.openai.com/v1")
+        buildConfigField("String", "OPENAI_API_KEY", properties.getProperty("OPENAI_API_KEY"))
     }
 
     buildTypes {
@@ -37,6 +47,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -95,9 +106,9 @@ dependencies {
     implementation(libs.tensorflow.lite.task.text)
 
     // 외부 api 호출을 위한 라이브러리
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.scalars)
+    implementation(libs.retrofit2.converter.gson)
     androidTestImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

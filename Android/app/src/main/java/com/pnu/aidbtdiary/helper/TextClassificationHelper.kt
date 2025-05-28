@@ -1,4 +1,4 @@
-package com.pnu.aidbtdiary.ml
+package com.pnu.aidbtdiary.helper
 
 import android.content.Context
 import android.os.SystemClock
