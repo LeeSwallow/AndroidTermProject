@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.pnu.aidbtdiary.ml.TextClassificationHelper
+import com.pnu.aidbtdiary.helper.TextClassificationHelper
 import org.tensorflow.lite.support.label.Category
 
 class MainActivity : AppCompatActivity(), TextClassificationHelper.TextResultsListener {
