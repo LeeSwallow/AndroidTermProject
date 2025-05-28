@@ -1,4 +1,4 @@
-package com.pnu.aidbtdiary.network.dto
+package com.pnu.aidbtdiary.dto
 
 data class CompletionRequest(
     val model: String,

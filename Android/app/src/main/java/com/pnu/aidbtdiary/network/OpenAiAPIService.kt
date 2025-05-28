@@ -1,9 +1,8 @@
 package com.pnu.aidbtdiary.network
 
 import CompletionResponse
-import com.pnu.aidbtdiary.network.dto.CompletionRequest
+import com.pnu.aidbtdiary.dto.CompletionRequest
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface OpenAiAPIService {

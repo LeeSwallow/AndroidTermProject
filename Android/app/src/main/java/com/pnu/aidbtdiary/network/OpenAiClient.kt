@@ -1,9 +1,8 @@
-package com.pnu.aidbtdiary.network.dto
+package com.pnu.aidbtdiary.network
 
 import CompletionResponse
 import com.pnu.aidbtdiary.BuildConfig
-import com.pnu.aidbtdiary.BuildConfig.OPENAI_BASE_URL
-import com.pnu.aidbtdiary.network.OpenAiAPIService
+import com.pnu.aidbtdiary.dto.CompletionRequest
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,7 +20,7 @@ class OpenAiClient {
             .build()
 
         private val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(OPENAI_BASE_URL)
+            .baseUrl(BuildConfig.OPENAI_BASE_URL)
             .client(okHttpAiClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
