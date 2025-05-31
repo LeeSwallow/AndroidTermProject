@@ -5,6 +5,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
     id("de.undercouch.download") version "5.5.0"
 }
 
@@ -34,8 +35,9 @@ android {
         val properties = Properties()
         properties.load(file("env.properties").inputStream())
 
-        buildConfigField("String", "OPENAI_BASE_URL", "https://api.openai.com/v1")
-        buildConfigField("String", "OPENAI_API_KEY", properties.getProperty("OPENAI_API_KEY"))
+        buildConfigField("String", "OPENAI_MODEL", "\"gpt-4.1-mini-2025-04-14\"")
+        buildConfigField("String", "OPENAI_BASE_URL", "\"https://api.openai.com/v1\"")
+        buildConfigField("String", "OPENAI_API_KEY", '"' + properties.getProperty("OPENAI_API_KEY") + '"')
     }
 
     buildTypes {
@@ -109,6 +111,14 @@ dependencies {
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.retrofit2.converter.gson)
+
+    // 로컬 db를 위한 room 라이브러리
+    val room_version = "2.7.1"
+    ksp("androidx.room:room-compiler:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version") // 코루틴 support
+
+    // testing 라이브러리
     androidTestImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
