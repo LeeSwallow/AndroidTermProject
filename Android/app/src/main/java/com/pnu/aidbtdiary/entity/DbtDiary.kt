@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "dbt_diary")
 data class DbtDiary (
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 1,
      val date: LocalDate,
      val situation: String,
      val emotion: String,
@@ -16,6 +16,7 @@ data class DbtDiary (
      val thought: String,
      val behavior: String,
      val dbtSkill: String,
+    val isSynced: Boolean = false,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )
