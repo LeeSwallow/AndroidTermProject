@@ -1,6 +1,8 @@
 package com.pnu.aidbtdiary.dto
 
+import com.pnu.aidbtdiary.entity.DbtDiary
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 class DbtDiaryForm {
@@ -32,8 +34,23 @@ class DbtDiaryForm {
             행동: $behavior
             """;
     }
-
     fun getDate(): LocalDate {
         return date
+    }
+
+    fun toEntityWithSentiment(sentiment: Boolean): DbtDiary {
+        return DbtDiary(
+            date = date,
+            situation = situation,
+            emotion = emotion,
+            intensity = intensity,
+            thought = thought,
+            behavior = behavior,
+            dbtSkill = dbtSkill,
+            sentiment = sentiment,
+            isSynced = false,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
     }
 }
