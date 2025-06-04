@@ -57,7 +57,8 @@ class RoomDbtDIaryDaoTest {
         dbtSkill = dbtSkill,
         isSynced = isSynced,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        sentiment = false // Default sentiment value
     )
 
     val diary1 = createDiary(

@@ -1,6 +1,5 @@
 package com.pnu.aidbtdiary.entity
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate

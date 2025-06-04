@@ -32,7 +32,7 @@ class DbtDiaryForm {
             강도: $intensity
             생각: $thought
             행동: $behavior
-            """;
+            """
     }
     fun getDate(): LocalDate {
         return date
