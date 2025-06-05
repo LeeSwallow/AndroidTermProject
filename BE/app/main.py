@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from .routes import dbt_diary
+
+app = FastAPI(title="DBT Diary Sync API")
 
 # CORS 설정
 app.add_middleware(
@@ -12,10 +14,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# 라우터 등록
+app.include_router(dbt_diary.router)
+
+
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "DBT Diary Sync API"}
+
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)

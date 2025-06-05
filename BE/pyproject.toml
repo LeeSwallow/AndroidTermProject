@@ -1,0 +1,19 @@
+[project]
+name = "be"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "datetime>=5.5",
+    "dotenv>=0.9.9",
+    "fastapi>=0.115.12",
+    "fastmcp>=2.6.1",
+    "httpx>=0.28.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic>=2.11.5",
+    "python-dotenv>=1.1.0",
+    "python-jose[crytography]>=3.5.0",
+    "python-multipart>=0.0.20",
+    "supabase>=2.15.2",
+]
