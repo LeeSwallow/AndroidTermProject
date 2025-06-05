@@ -1,3 +1,0 @@
-"""
-DBT Diary API Server
-""" 
