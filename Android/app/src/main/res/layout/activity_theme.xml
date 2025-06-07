@@ -6,23 +6,16 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/btnTodayEntry"
+        android:id="@+id/btnDefaultTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="오늘의 감정카드 작성하기" />
+        android:text="기본 테마" />
 
     <Button
-        android:id="@+id/btnViewDiary"
+        android:id="@+id/btnGalleryTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="일기 조회하기"
-        android:layout_marginTop="8dp" />
-
-    <Button
-        android:id="@+id/btnSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="설정"
+        android:text="갤러리에서 사진 선택"
         android:layout_marginTop="8dp" />
 
 </LinearLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/etSituation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="오늘의 주요 상황" />
+
+        <Spinner
+            android:id="@+id/spEmotionType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="감정 강도 (1~10)"
+            android:layout_marginTop="8dp" />
+
+        <SeekBar
+            android:id="@+id/sbEmotionIntensity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10" />
+
+        <EditText
+            android:id="@+id/etThought"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="어떤 생각이 들었나요?"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etReaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="사용자의 반응"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btnSaveEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="저장 및 AI 조언 받기"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>
