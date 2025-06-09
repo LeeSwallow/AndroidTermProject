@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id("de.undercouch.download") version "5.5.0"
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 // ASSET_DIR, TEST_ASSET_DIR 프로젝트 속성 지정
@@ -112,13 +113,13 @@ dependencies {
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.retrofit2.converter.gson)
-    implementation("com.google.mlkit:translate:17.0.3")
+    implementation(libs.translate)
+
 
     // 로컬 db를 위한 room 라이브러리
-    val room_version = "2.7.1"
-    ksp("androidx.room:room-compiler:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version") // 코루틴 support
+    ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx) // 코루틴 support
 
     // testing 라이브러리
     androidTestImplementation(libs.androidx.test.ext.junit)
@@ -126,5 +127,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-
+    // Supabase 라이브러리
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.4"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.ktor:ktor-client-okhttp:3.1.3")
 }
