@@ -21,8 +21,9 @@ android {
     compileSdk = 35
 
     buildFeatures {
-        buildConfig = true
+        dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
 
     defaultConfig {
@@ -36,7 +37,7 @@ android {
         val properties = Properties()
         properties.load(file("env.properties").inputStream())
         buildConfigField("String", "OPENAI_MODEL", "\"gpt-4.1-mini-2025-04-14\"")
-        buildConfigField("String", "OPENAI_BASE_URL", "\"https://api.openai.com/v1\"")
+        buildConfigField("String", "OPENAI_BASE_URL", "\"https://api.openai.com/v1/\"")
         buildConfigField("String", "OPENAI_API_KEY", '"' + properties.getProperty("OPENAI_API_KEY") + '"')
     }
 
@@ -111,6 +112,7 @@ dependencies {
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.retrofit2.converter.gson)
+    implementation("com.google.mlkit:translate:17.0.3")
 
     // 로컬 db를 위한 room 라이브러리
     val room_version = "2.7.1"

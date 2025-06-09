@@ -1,7 +1,7 @@
 package com.pnu.aidbtdiary.network
 
-import CompletionResponse
 import com.pnu.aidbtdiary.BuildConfig
+import CompletionResponse
 import com.pnu.aidbtdiary.dto.CompletionRequest
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

@@ -20,6 +20,13 @@
         android:layout_marginTop="8dp"
         android:text="로딩 중..." />
 
+    <Button
+        android:id="@+id/btnGetAdvice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AI 조언 받기"
+        android:layout_marginTop="16dp" />
+
     <EditText
         android:id="@+id/etUserResponse"
         android:layout_width="match_parent"
