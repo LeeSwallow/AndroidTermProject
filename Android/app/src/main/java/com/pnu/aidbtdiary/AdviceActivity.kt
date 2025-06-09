@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
-import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.pnu.aidbtdiary.AdviceActivity
+import com.pnu.aidbtdiary.dao.AppDatabase
 import com.pnu.aidbtdiary.dao.DbtDiaryDao
 import com.pnu.aidbtdiary.databinding.ActivityAdviceBinding
 import com.pnu.aidbtdiary.dto.DbtDiaryForm
@@ -18,7 +16,6 @@ import com.pnu.aidbtdiary.helper.AppDatabaseHelper
 import com.pnu.aidbtdiary.helper.PromptTemplateHelper
 import com.pnu.aidbtdiary.helper.TextClassificationHelper
 import com.pnu.aidbtdiary.network.OpenAiClient
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.label.Category
 import java.time.LocalDate
@@ -26,13 +23,13 @@ import java.time.LocalDate
 class AdviceActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdviceBinding
-    private lateinit var db: AppDatabaseHelper.AppDatabase
+    private lateinit var db: AppDatabase
     private lateinit var dao: DbtDiaryDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdviceBinding.inflate(layoutInflater)
-        db = Room.inMemoryDatabaseBuilder(this, AppDatabaseHelper.AppDatabase::class.java).build()
+        db = AppDatabaseHelper.getDatabase(this)
         dao = db.dbtDiaryDao()
 
         setContentView(binding.root)
@@ -45,7 +42,7 @@ class AdviceActivity : AppCompatActivity() {
         dbtDiaryForm.thought = intent.getStringExtra("thought") ?: ""
         dbtDiaryForm.behavior = intent.getStringExtra("reaction") ?: ""
 
-        binding.tvAdviceContent.text = "여기에 AI 조언이 표시됩니다."
+         binding.tvAdviceContent.text = "여기에 AI 조언이 표시됩니다."
 
         binding.btnGetAdvice.setOnClickListener {
             // AI 조언 요청 로직
