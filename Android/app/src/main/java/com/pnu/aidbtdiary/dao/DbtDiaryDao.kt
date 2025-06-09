@@ -13,13 +13,13 @@ interface DbtDiaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg diary: DbtDiary)
 
-    @Query("SELECT * FROM dbt_diary")
+    @Query("SELECT * FROM dbt_diary WHERE deleted = 0 ORDER BY date DESC")
     suspend fun getAll(): List<DbtDiary>
 
-    @Query("SELECT * FROM dbt_diary WHERE date = :date")
+    @Query("SELECT * FROM dbt_diary WHERE date = :date AND deleted = 0")
     suspend fun getByDate(date: LocalDate): DbtDiary?
 
-    @Query("SELECT * FROM dbt_diary WHERE date >= :startDate AND date <= :endDate")
+    @Query("SELECT * FROM dbt_diary WHERE date >= :startDate AND date <= :endDate AND deleted = 0 ORDER BY date DESC")
     suspend fun getAllBetweenDates(startDate: LocalDate, endDate: LocalDate): List<DbtDiary>
 
     @Update

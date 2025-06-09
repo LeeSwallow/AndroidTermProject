@@ -47,8 +47,8 @@ class DbtDiaryForm {
             thought = thought,
             behavior = behavior,
             dbtSkill = dbtSkill,
+            deleted = false,
             sentiment = sentiment,
-            isSynced = false,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()
         )
