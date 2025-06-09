@@ -1,16 +1,15 @@
+// AppDatabaseHelper.kt
 package com.pnu.aidbtdiary.helper
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.pnu.aidbtdiary.dao.DbtDiaryDao
-import com.pnu.aidbtdiary.dao.LocalDateTimeConverters
-import com.pnu.aidbtdiary.entity.DbtDiary
+import android.content.Context
+import androidx.room.Room
+import com.pnu.aidbtdiary.dao.AppDatabase
 
-class AppDatabaseHelper {
-    @Database(entities = [DbtDiary::class], version = 1)
-    @TypeConverters(LocalDateTimeConverters::class)
-    abstract class AppDatabase : RoomDatabase() {
-        abstract fun dbtDiaryDao(): DbtDiaryDao
-    }
+object AppDatabaseHelper {
+    fun getDatabase(context: Context): AppDatabase =
+        Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java,
+            "aidbt-diary-db"
+        ).build()
 }
