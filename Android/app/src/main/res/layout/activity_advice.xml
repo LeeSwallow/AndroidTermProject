@@ -1,44 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/md_theme_light_background">
 
-    <TextView
-        android:id="@+id/tvAdvicePrompt"
+    <!-- 상단 앱바 -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AI 조언"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/md_theme_light_primary"
+        app:title="AI 조언 요청"
+        app:titleTextColor="@color/md_theme_light_onPrimary"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:elevation="4dp" />
 
-    <TextView
-        android:id="@+id/tvAdviceContent"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="로딩 중..." />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:weightSum="7">
 
-    <Button
-        android:id="@+id/btnGetAdvice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AI 조언 받기"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI 조언 요청:"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/etAdvicePrompt"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:background="@drawable/bg_input_card"
+            android:hint="상황을 입력하거나, AI에게 조언을 요청하세요."
+            android:padding="12dp"
+            android:textColor="@color/input_card_text"
+            android:textColorHint="@color/input_card_hint"
+            android:gravity="top|start"
+            android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/etUserResponse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="어떻게 대응하셨나요?"
-        android:layout_marginTop="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btnGetAdvice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="조언 받기"
+                android:background="@drawable/bg_main_card2"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:elevation="2dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp" />
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/btnSaveResponse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="저장"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DBT 스킬 선택:"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="4dp" />
+        <Spinner
+            android:id="@+id/spDbtSkill"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:background="@drawable/bg_input_card"
+            android:layout_marginBottom="12dp"
+            android:padding="8dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나의 대응 작성:"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/etUserResponse"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:background="@drawable/bg_input_card"
+            android:hint="어떻게 대응하셨나요?"
+            android:padding="12dp"
+            android:textColor="@color/input_card_text"
+            android:textColorHint="@color/input_card_hint"
+            android:gravity="top|start"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btnSaveResponse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="작성 완료"
+                android:background="@drawable/bg_main_card"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:elevation="2dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
