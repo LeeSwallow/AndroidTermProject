@@ -12,6 +12,7 @@ data class DbtDiaryRemote(
     val thought: String,
     val behavior: String,
     val dbt_skill: String,
+    val solution: String,
     val deleted: Boolean = false,
     val sentiment: Boolean,
     val created_at: String,

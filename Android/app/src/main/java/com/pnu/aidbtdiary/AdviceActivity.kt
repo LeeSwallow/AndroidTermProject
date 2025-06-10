@@ -33,7 +33,7 @@ class AdviceActivity : AppCompatActivity() {
         dao = db.dbtDiaryDao()
 
         setContentView(binding.root)
-
+        initDebug()
         // EntryActivity에서 전달된 데이터
         val dbtDiaryForm = DbtDiaryForm(LocalDate.now())
         dbtDiaryForm.situation = intent.getStringExtra("situation") ?: ""
@@ -57,17 +57,16 @@ class AdviceActivity : AppCompatActivity() {
         }
 
         binding.btnSaveResponse.setOnClickListener {
-            val userResponse = binding.etUserResponse.text.toString()
+            val dbtSkill = binding.etDbtSkill.text.toString()
 
-            if (userResponse.isBlank()) {
-                binding.etUserResponse.error = "사용자 대응을 입력해주세요."
+            if (dbtSkill.isBlank()) {
+                binding.etUserResponse.error = "dbtSkill을 입력하세요."
                 return@setOnClickListener
             }
 
             binding.btnSaveResponse.isEnabled = false
 
-            // 사용자 대응 저장
-            dbtDiaryForm.dbtSkill = userResponse
+            dbtDiaryForm.dbtSkill = dbtSkill
 
             val textClassificationHelper = TextClassificationHelper(
                 context = this,
@@ -77,8 +76,10 @@ class AdviceActivity : AppCompatActivity() {
                         binding.btnSaveResponse.isEnabled = true
                     }
                     override fun onResult(results: List<Category>, inferenceTime: Long) {
-                        val sentiment =  results[1].score > 0.5f
-                        dbtDiaryForm.toEntityWithSentiment(sentiment).let { dbtDiary ->
+                        dbtDiaryForm.sentiment = results[1].score > 0.5f
+                        dbtDiaryForm.solution = binding.etUserResponse.text.toString()
+
+                        dbtDiaryForm.toEntity().let { dbtDiary ->
                             lifecycleScope.launch {
                                 dao.insert(dbtDiary)
                                 Toast.makeText(
@@ -149,6 +150,11 @@ class AdviceActivity : AppCompatActivity() {
                 callback(form.emotion)
                 translator.close()
             }
+    }
+
+    private fun initDebug() {
+        binding.etDbtSkill.setText("마음읽기")
+        binding.etUserResponse.setText("상대방의 마음을 이해하려고 노력했어요. 그 사람의 입장에서 생각해보니, 그 사람도 힘든 상황이었을 것 같아요. 그래서 더 이상 화내지 않기로 했어요.")
     }
 }
 

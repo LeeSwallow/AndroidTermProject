@@ -15,6 +15,7 @@ data class DbtDiary (
      val thought: String,
      val behavior: String,
      val dbtSkill: String,
+    val solution: String = "",
     val deleted: Boolean = false,
     val sentiment: Boolean,
     val createdAt: LocalDateTime,

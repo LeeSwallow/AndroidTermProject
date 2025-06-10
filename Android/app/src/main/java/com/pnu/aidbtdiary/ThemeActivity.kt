@@ -3,18 +3,24 @@ package com.pnu.aidbtdiary
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pnu.aidbtdiary.databinding.ActivityThemeBinding
+import com.pnu.aidbtdiary.helper.SyncHelper
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ThemeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityThemeBinding
+    private lateinit var syncHelper: SyncHelper
     private val PICK_IMAGE_REQUEST = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityThemeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        syncHelper = SyncHelper(this)
         binding.btnDefaultTheme.setOnClickListener {
             // 기본 테마로 변경
         }
@@ -23,6 +29,20 @@ class ThemeActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        }
+
+        binding.btnSync.setOnClickListener {
+            GlobalScope.launch {
+                syncHelper.syncDiaries({
+                    runOnUiThread {
+                        Toast.makeText(this@ThemeActivity, "동기화 성공", Toast.LENGTH_SHORT).show()
+                    }
+                }) { error ->
+                    runOnUiThread {
+                        Toast.makeText(this@ThemeActivity, "동기화 실패: $error", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 

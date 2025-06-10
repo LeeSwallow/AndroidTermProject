@@ -13,6 +13,8 @@ class DbtDiaryForm {
     var thought: String = ""
     var behavior: String = ""
     var dbtSkill: String = ""
+    var solution: String = ""
+    var sentiment: Boolean = false
 
     constructor(date: LocalDate) {
         this.date = date
@@ -38,7 +40,7 @@ class DbtDiaryForm {
         return date
     }
 
-    fun toEntityWithSentiment(sentiment: Boolean): DbtDiary {
+    fun toEntity(): DbtDiary {
         return DbtDiary(
             date = date,
             situation = situation,
@@ -47,6 +49,7 @@ class DbtDiaryForm {
             thought = thought,
             behavior = behavior,
             dbtSkill = dbtSkill,
+            solution = solution,
             deleted = false,
             sentiment = sentiment,
             createdAt = LocalDateTime.now(),

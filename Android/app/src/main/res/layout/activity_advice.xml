@@ -28,6 +28,14 @@
         android:layout_marginTop="16dp" />
 
     <EditText
+        android:id="@+id/etDbtSkill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="dbt 기술을 입력하세요"
+        android:layout_marginTop="16dp" />
+
+
+    <EditText
         android:id="@+id/etUserResponse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
