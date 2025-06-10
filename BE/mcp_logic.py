@@ -9,7 +9,6 @@ from datetime import datetime
 load_dotenv()
 url: str = os.environ.get("SUPABASE_URL") or ""
 key: str = os.environ.get("SUPABASE_KEY") or ""
-port: int = int(os.environ.get("PORT") or "8000") 
 
 if url == "" or key == "":
     raise ValueError("SUPABASE_URL or SUPABASE_KEY is not set")
@@ -172,4 +171,3 @@ async def delete_dbt_diary(
     response = supabase.table(table_name).update({"deleted": True}).eq("id", id).execute()
     return response.data
 
-mcp.run("sse", port=port, host="0.0.0.0")
