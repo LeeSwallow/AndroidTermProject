@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_theme_light_card_bg"/>
+    <corners android:radius="16dp"/>
+    <elevation android:shadowColor="@color/md_theme_light_secondary" android:shadowRadius="2"/>
+</shape> 

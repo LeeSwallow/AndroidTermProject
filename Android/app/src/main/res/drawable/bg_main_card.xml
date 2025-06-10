@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_theme_light_button_bg"/>
+    <corners android:radius="16dp"/>
+    <elevation android:shadowColor="@color/md_theme_light_primary" android:shadowRadius="4"/>
+</shape> 

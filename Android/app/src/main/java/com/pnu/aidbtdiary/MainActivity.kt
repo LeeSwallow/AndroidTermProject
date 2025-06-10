@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.topAppBar)
+
         binding.btnTodayEntry.setOnClickListener {
             startActivity(Intent(this, EntryActivity::class.java))
         }
