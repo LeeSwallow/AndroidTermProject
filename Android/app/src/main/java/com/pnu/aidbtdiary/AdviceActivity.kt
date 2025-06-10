@@ -42,16 +42,16 @@ class AdviceActivity : AppCompatActivity() {
         dbtDiaryForm.thought = intent.getStringExtra("thought") ?: ""
         dbtDiaryForm.behavior = intent.getStringExtra("reaction") ?: ""
 
-         binding.tvAdviceContent.text = "여기에 AI 조언이 표시됩니다."
+         binding.tvAdvicePrompt.text = "여기에 AI 조언이 표시됩니다."
 
         binding.btnGetAdvice.setOnClickListener {
             // AI 조언 요청 로직
             // 예시: OpenAI API 호출하여 조언 가져오기
-            binding.tvAdviceContent.text = "AI 조언을 가져오는 중..."
+            binding.tvAdvicePrompt.text = "AI 조언을 가져오는 중..."
             lifecycleScope.launch {
                 binding.btnGetAdvice.isEnabled = false
                 val advice = getAdviceFromOpenAI(dbtDiaryForm)
-                binding.tvAdviceContent.text = advice
+                binding.tvAdvicePrompt.text = advice
                 binding.btnGetAdvice.isEnabled = true
             }
         }
