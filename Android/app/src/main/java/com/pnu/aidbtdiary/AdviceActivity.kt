@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
@@ -82,10 +83,10 @@ class AdviceActivity : AppCompatActivity() {
                         dbtDiaryForm.toEntity().let { dbtDiary ->
                             lifecycleScope.launch {
                                 dao.insert(dbtDiary)
-                                Toast.makeText(
-                                    this@AdviceActivity,
+                                Snackbar.make(
+                                    binding.root,
                                     "일기가 저장되었습니다.",
-                                    Toast.LENGTH_SHORT
+                                    Snackbar.LENGTH_LONG
                                 ).show()
                                 finish() // 일기 저장 후 Activity 종료
                             }
@@ -140,13 +141,13 @@ class AdviceActivity : AppCompatActivity() {
                         translator.close()
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(this, "번역 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, "번역 실패: ${e.message}", Snackbar.LENGTH_LONG).show()
                         callback(form.emotion)
                         translator.close()
                     }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "모델 다운로드 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "모델 다운로드 실패: ${e.message}", Snackbar.LENGTH_LONG).show()
                 callback(form.emotion)
                 translator.close()
             }
