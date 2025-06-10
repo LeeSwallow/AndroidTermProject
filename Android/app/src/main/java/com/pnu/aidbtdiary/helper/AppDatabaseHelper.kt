@@ -10,6 +10,6 @@ object AppDatabaseHelper {
         Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "aidbt-diary-db"
+            "local-db"
         ).build()
 }

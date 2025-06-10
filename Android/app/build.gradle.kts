@@ -40,6 +40,8 @@ android {
         buildConfigField("String", "OPENAI_MODEL", "\"gpt-4.1-mini-2025-04-14\"")
         buildConfigField("String", "OPENAI_BASE_URL", "\"https://api.openai.com/v1/\"")
         buildConfigField("String", "OPENAI_API_KEY", '"' + properties.getProperty("OPENAI_API_KEY") + '"')
+        buildConfigField("String", "SUPABASE_URL", '"' + properties.getProperty("SUPABASE_PROJECT_URL") + '"')
+        buildConfigField("String", "SUPABASE_KEY", '"' + properties.getProperty("SUPABASE_ANON_KEY") + '"')
     }
 
     buildTypes {
