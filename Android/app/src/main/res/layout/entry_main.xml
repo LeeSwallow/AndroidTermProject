@@ -1,59 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/md_theme_light_background">
+
+    <!-- 상단 앱바 -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/md_theme_light_primary"
+        app:title="감정 일기 작성"
+        app:titleTextColor="@color/md_theme_light_onPrimary"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:elevation="4dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <EditText
-            android:id="@+id/etSituation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="오늘의 주요 상황" />
-
-        <Spinner
-            android:id="@+id/spEmotionType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:spinnerMode="dropdown" />
+        android:padding="16dp"
+        android:weightSum="8">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="감정 강도 (1~10)"
-            android:layout_marginTop="8dp" />
-
-        <SeekBar
-            android:id="@+id/sbEmotionIntensity"
+            android:text="상황:"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/etSituation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="10" />
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/bg_input_card"
+            android:hint="오늘의 주요 상황"
+            android:padding="12dp"
+            android:textColor="@color/input_card_text"
+            android:textColorHint="@color/input_card_hint"
+            android:gravity="top|start"
+            android:layout_marginBottom="12dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="감정:"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_onBackground"
+                android:layout_marginEnd="8dp" />
+            <Spinner
+                android:id="@+id/spEmotionType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_card" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="강도:"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_onBackground"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp" />
+            <SeekBar
+                android:id="@+id/sbEmotionIntensity"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:max="10" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="생각:"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/etThought"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/bg_input_card"
             android:hint="어떤 생각이 들었나요?"
-            android:layout_marginTop="8dp" />
+            android:padding="12dp"
+            android:textColor="@color/input_card_text"
+            android:textColorHint="@color/input_card_hint"
+            android:gravity="top|start"
+            android:layout_marginBottom="12dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="반응:"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/etReaction"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/bg_input_card"
             android:hint="사용자의 반응"
-            android:layout_marginTop="8dp" />
+            android:padding="12dp"
+            android:textColor="@color/input_card_text"
+            android:textColorHint="@color/input_card_hint"
+            android:gravity="top|start"
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/btnSaveEntry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="저장 및 AI 조언 받기"
-            android:layout_marginTop="16dp" />
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="다음"
+            android:background="@drawable/bg_main_card2"
+            android:textColor="@color/md_theme_light_card_text"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:elevation="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

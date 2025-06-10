@@ -18,4 +18,7 @@
     <color name="md_theme_light_button_text">#2D2A6B</color>
     <color name="md_theme_light_card_bg">#E3F2FD</color>
     <color name="md_theme_light_card_text">#1C1B1F</color>
+    <color name="input_card_bg">#F3F4F6</color>
+    <color name="input_card_text">#222222</color>
+    <color name="input_card_hint">#A0A0A0</color>
 </resources>
