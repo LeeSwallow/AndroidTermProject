@@ -7,17 +7,19 @@ import android.os.Environment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pnu.aidbtdiary.entity.DbtDiary
+import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.time.LocalDateTime
 
-data class DbtDiaryListWrapper(
-    val contents: List<DbtDiary>
-)
+class FsHelper(private val context: Context) {
 
-object ConvertToJsonHelper {
-    fun exportDbtDiaryListToJson(context: Context, diaryList: List<DbtDiary>): Uri? {
+    private data class DbtDiaryListWrapper(
+        val contents: List<DbtDiary>
+    )
+
+    private fun exportDbtDiaryListToJson(diaryList: List<DbtDiary>): Uri? {
         val gson = Gson()
         val wrapper = DbtDiaryListWrapper(diaryList)
         val jsonString = gson.toJson(wrapper)
@@ -28,16 +30,32 @@ object ConvertToJsonHelper {
         return Uri.fromFile(file)
     }
 
-    fun downloadJsonFile(context: Context, fileUri: Uri) {
-        val request = DownloadManager.Request(fileUri)
+    fun saveSpeechToMp3(response : ResponseBody, fileName: String): File {
+        val file = File(context.filesDir, fileName)
+        response.byteStream().use { input ->
+            FileOutputStream(file).use { output ->
+                input.copyTo(output)
+            }
+        }
+        return file
+    }
+
+    fun downloadDbtDiaryToJson(diaries: List<DbtDiary>) {
+        val jsonUri = exportDbtDiaryListToJson(diaries)
+        if (jsonUri == null) {
+            throw Exception("DBT Diary 데이터를 JSON으로 변환하는 데 실패했습니다.")
+        }
+
+        val request = DownloadManager.Request(jsonUri)
             .setTitle("DBT Diary Export")
             .setDescription("DBT Diary 데이터를 JSON으로 내보냅니다.")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileUri.lastPathSegment)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, jsonUri.lastPathSegment)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setMimeType("application/json")
 
         val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         dm.enqueue(request)
+
     }
 
     fun importDbtDiaryListFromJson(

@@ -26,12 +26,14 @@ class AdviceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdviceBinding
     private lateinit var db: AppDatabase
     private lateinit var dao: DbtDiaryDao
+    private lateinit var openAiClient: OpenAiClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdviceBinding.inflate(layoutInflater)
         db = AppDatabaseHelper.getDatabase(this)
         dao = db.dbtDiaryDao()
+        openAiClient = OpenAiClient()
 
         setContentView(binding.root)
         initDebug()
@@ -105,7 +107,7 @@ class AdviceActivity : AppCompatActivity() {
             return "입력된 정보가 유효하지 않습니다."
         }
         val req = PromptTemplateHelper.generateCompletionRequest(dbtDiaryForm)
-        OpenAiClient.getCompletion(req)?.let { response ->
+        openAiClient.getCompletion(req)?.let { response ->
             if (response.choices.isNotEmpty()) {
                 return response.choices[0].message.content
             } else {

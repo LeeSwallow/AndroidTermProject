@@ -3,13 +3,16 @@ package com.pnu.aidbtdiary.network
 import com.pnu.aidbtdiary.BuildConfig
 import CompletionResponse
 import com.pnu.aidbtdiary.dto.CompletionRequest
+import com.pnu.aidbtdiary.dto.TTSRequest
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class OpenAiClient {
-    companion object {
-        private val okHttpAiClient = OkHttpClient.Builder()
+    val api:OpenAiAPIService
+    init {
+        val okHttpAiClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer ${BuildConfig.OPENAI_API_KEY}")
@@ -18,17 +21,19 @@ class OpenAiClient {
                 chain.proceed(request)
             }
             .build()
-
-        private val retrofit: Retrofit = Retrofit.Builder()
+        val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.OPENAI_BASE_URL)
             .client(okHttpAiClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+        api = retrofit.create(OpenAiAPIService::class.java)
+    }
 
-        val api: OpenAiAPIService = retrofit.create(OpenAiAPIService::class.java)
+    suspend fun getCompletion(request: CompletionRequest): CompletionResponse {
+        return api.getResponse(request)
+    }
 
-        suspend fun getCompletion(request: CompletionRequest): CompletionResponse {
-            return api.getResponse(request)
-        }
+    suspend fun getSpeech(request: TTSRequest): ResponseBody {
+        return api.getSpeech(request)
     }
 }

@@ -17,16 +17,8 @@ class SupaClient{
         return dbtDiaryTable.select().decodeList<DbtDiaryRemote>()
     }
 
-    suspend fun insertDiary(diary: DbtDiaryRemote): DbtDiaryRemote? {
-        return dbtDiaryTable.insert(diary).decodeSingle()
-    }
-
     suspend fun insertDiaries(diaries: List<DbtDiaryRemote>): List<DbtDiaryRemote> {
         return dbtDiaryTable.insert(diaries).decodeList()
-    }
-
-    suspend fun updateDiary(diary: DbtDiaryRemote): DbtDiaryRemote? {
-        return dbtDiaryTable.update(diary).decodeSingle()
     }
 
     suspend fun updateDiaries(diaries: List<DbtDiaryRemote>): List<DbtDiaryRemote> {
