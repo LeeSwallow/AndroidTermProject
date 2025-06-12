@@ -13,11 +13,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvEntry.setOnClickListener {
+        binding.cardEntry.setOnClickListener {
             startActivity(Intent(this, EntryActivity::class.java))
         }
 
-        binding.tvHistory.setOnClickListener {
+        binding.cardHistory.setOnClickListener {
             startActivity(Intent(this, DiaryListActivity::class.java))
         }
 
@@ -26,3 +26,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
