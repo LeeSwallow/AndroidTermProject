@@ -92,8 +92,6 @@ class AdviceActivity : AppCompatActivity() {
                                     toast.show()
                                     translationHelper.downloadModel()
                                     toast.cancel()
-                                    toast = Toast.makeText(this@AdviceActivity, "번역 모델 다운로드 완료!", Toast.LENGTH_SHORT)
-                                    toast.show()
                                     dbtDiaryForm.sentiment =
                                         textClassificationHelper.classify(dbtDiaryForm.situation)
                                 }
@@ -116,6 +114,7 @@ class AdviceActivity : AppCompatActivity() {
                     }
                 }
                 dao.insert(dbtDiaryForm.toEntity())
+                Toast.makeText(applicationContext, "DBT 일기가 저장되었습니다.", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

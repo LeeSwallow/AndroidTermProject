@@ -18,10 +18,11 @@ class SupaClient{
     }
 
     suspend fun insertDiaries(diaries: List<DbtDiaryRemote>): List<DbtDiaryRemote> {
-        return dbtDiaryTable.insert(diaries).decodeList()
+        // Insert diaries into the Supabase table
+        return dbtDiaryTable.insert(diaries).decodeList<DbtDiaryRemote>()
     }
-
-    suspend fun updateDiaries(diaries: List<DbtDiaryRemote>): List<DbtDiaryRemote> {
-        return dbtDiaryTable.update(diaries).decodeList()
+    suspend fun upsertDiaries(diaries :List<DbtDiaryRemote>) : List<DbtDiaryRemote> {
+        // Upsert diaries into the Supabase table
+        return dbtDiaryTable.upsert(diaries).decodeList<DbtDiaryRemote>()
     }
 }

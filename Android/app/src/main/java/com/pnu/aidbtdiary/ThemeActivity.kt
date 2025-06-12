@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pnu.aidbtdiary.databinding.ActivityThemeBinding
+import com.pnu.aidbtdiary.helper.NotificationUtil
 import com.pnu.aidbtdiary.helper.SyncHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -20,7 +21,9 @@ class ThemeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityThemeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        syncHelper = SyncHelper(this)
+
+        NotificationUtil.createChannel(applicationContext)
+        syncHelper = SyncHelper(applicationContext)
         binding.btnDefaultTheme.setOnClickListener {
             // 기본 테마로 변경
         }
@@ -31,17 +34,10 @@ class ThemeActivity : AppCompatActivity() {
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
 
+
         binding.btnSync.setOnClickListener {
             GlobalScope.launch {
-                syncHelper.syncDiaries({
-                    runOnUiThread {
-                        Toast.makeText(this@ThemeActivity, "동기화 성공", Toast.LENGTH_SHORT).show()
-                    }
-                }) { error ->
-                    runOnUiThread {
-                        Toast.makeText(this@ThemeActivity, "동기화 실패: $error", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                syncHelper.syncDiaries()
             }
         }
     }

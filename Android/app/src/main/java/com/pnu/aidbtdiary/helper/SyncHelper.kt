@@ -4,11 +4,13 @@ import android.content.Context
 import com.pnu.aidbtdiary.dto.DbtDiaryRemote
 import com.pnu.aidbtdiary.entity.DbtDiary
 import com.pnu.aidbtdiary.network.SupaClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class SyncHelper(context: Context) {
+class SyncHelper(private val context: Context) {
     private val dao = AppDatabaseHelper.getDatabase(context).dbtDiaryDao()
     private val supaClient = SupaClient()
 
@@ -51,53 +53,62 @@ class SyncHelper(context: Context) {
         }
     }
 
-    suspend fun syncDiaries(onSuccess : () -> Unit, onError: (Throwable) -> Unit) {
+    suspend fun syncDiaries() {
         val localDiaries = dao.getAll()
         val remoteDiaries = supaClient.getAllDiaries()
         val remoteDiariesConverted = remoteToLocal(remoteDiaries)
         val (localResult, remoteResult) = findUpdatedDiaries(localDiaries, remoteDiariesConverted)
         try {
-            if (localResult.needCreate.isNotEmpty()) dao.insertAll(localResult.needCreate)
-            if (localResult.needUpdate.isNotEmpty()) dao.updateAll(localResult.needUpdate)
-
-            if (remoteResult.needCreate.isNotEmpty())
+            if (localResult.needCreate .isNotEmpty() || localResult.needUpdate.isNotEmpty()) {
+                val sumResult = localResult.needCreate + localResult.needUpdate
+                dao.insertAll(sumResult)
+            }
+            if (remoteResult.needUpdate.isNotEmpty()) {
+                supaClient.upsertDiaries(localToRemote(remoteResult.needUpdate))
+            }
+            if (remoteResult.needCreate.isNotEmpty()) {
                 supaClient.insertDiaries(localToRemote(remoteResult.needCreate))
-            if (remoteResult.needUpdate.isNotEmpty())
-                supaClient.updateDiaries(localToRemote(remoteResult.needUpdate))
+            }
+
+            withContext(Dispatchers.Main) {
+                NotificationUtil.notifySyncComplete(context)
+            }
         } catch (e: Throwable) {
-            onError(e)
+            withContext(Dispatchers.Main) {
+                NotificationUtil.notifySyncError(context, e.message ?: "알 수 없는 오류")
+            }
+            return
         }
-        onSuccess()
     }
 
     private fun findUpdatedDiaries(diaries1: List<DbtDiary>, diaries2: List<DbtDiary>):
-            Pair<SearchedResult, SearchedResult> {
-        val createdDiaries1 = mutableListOf<DbtDiary>()
-        val updatedDiaries1 = mutableListOf<DbtDiary>()
-        val createdDiaries2 = mutableListOf<DbtDiary>()
-        val updatedDiaries2 = mutableListOf<DbtDiary>()
-        val searchMap = diaries1.associateBy { it.id }.toMutableMap()
+            Pair<SyncResult, SyncResult> {
+        val resultCreate1 = mutableListOf<DbtDiary>()
+        val resultUpdate1 = mutableListOf<DbtDiary>()
+        val resultCreate2 = mutableListOf<DbtDiary>()
+        val resultUpdate2 = mutableListOf<DbtDiary>()
 
+        val searchMap = diaries1.associateBy { it.id }.toMutableMap()
         for (diary in diaries2) {
             val baseDiary = searchMap[diary.id]
             if (baseDiary == null) {
-                createdDiaries1.add(diary)
+                resultCreate1.add(diary)
             } else {
                 if (baseDiary.updatedAt.isBefore(diary.updatedAt)) {
-                    updatedDiaries1.add(diary)
+                    resultUpdate1.add(diary)
                 } else if (baseDiary.updatedAt.isAfter(diary.updatedAt)) {
-                    updatedDiaries2.add(baseDiary)
+                    resultUpdate2.add(baseDiary)
                 }
                 searchMap.remove(diary.id)
             }
         }
-        createdDiaries2.addAll(searchMap.values)
 
-        return Pair(SearchedResult(updatedDiaries1, createdDiaries1), SearchedResult(updatedDiaries2, createdDiaries2))
+        resultCreate2.addAll(searchMap.values)
+        return SyncResult(resultUpdate1, resultCreate1) to SyncResult(resultUpdate2, resultCreate2)
     }
-}
 
-data class SearchedResult (
-    val needUpdate : List<DbtDiary>,
-    val needCreate : List<DbtDiary>
-)
+    data class SyncResult(
+        val needUpdate: List<DbtDiary>,
+        val needCreate: List<DbtDiary>
+    )
+}

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "dbt_diary")
 data class DbtDiary (
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
      val date: LocalDate,
      val situation: String,
      val emotion: String,
