@@ -70,17 +70,6 @@ tasks.register<Download>("downloadMobileBERTTextClassifierModel") {
     overwrite(false)
 }
 
-tasks.register<Download>("downloadWorkVecTextClassifierModel") {
-    src("https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/text_classification/android/text_classification_v2.tflite")
-    dest(file("$assetDir/wordvec.tflite"))
-    overwrite(false)
-}
-
-tasks.register<Download>("downloadTestWorkVecTextClassifierModel") {
-    src("https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/text_classification/android/text_classification_v2.tflite")
-    dest(file("$testAssetDir/wordvec.tflite"))
-    overwrite(false)
-}
 
 tasks.register<Download>("downloadTestMobileBERTTextClassifierModel") {
     src("https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/text_classification/android/mobilebert.tflite")
@@ -92,8 +81,6 @@ tasks.register<Download>("downloadTestMobileBERTTextClassifierModel") {
 tasks.named("preBuild") {
     dependsOn(
         "downloadMobileBERTTextClassifierModel",
-        "downloadWorkVecTextClassifierModel",
-        "downloadTestWorkVecTextClassifierModel",
         "downloadTestMobileBERTTextClassifierModel"
     )
 }
@@ -105,6 +92,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // 코루틴을 위한 라이브러리
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // tensorflow 를 위한 라이브러리
     implementation(libs.tensorflow.lite.gpu.delegate.plugin)

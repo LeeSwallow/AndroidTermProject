@@ -2,6 +2,8 @@ package com.pnu.aidbtdiary.helper
 
 import android.content.Context
 import android.os.SystemClock
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.tensorflow.lite.support.label.Category
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.text.nlclassifier.BertNLClassifier
@@ -9,18 +11,10 @@ import org.tensorflow.lite.task.text.nlclassifier.NLClassifier
 import java.util.concurrent.ScheduledThreadPoolExecutor
 
 class TextClassificationHelper(
-    var currentDelegate: Int = 0,
-    var currentModel: String = WORD_VEC,
     val context: Context,
-    val listener: TextResultsListener,
 ) {
-    // There are two different classifiers here to support both the Average Word Vector
-    // model (NLClassifier) and the MobileBERT model (BertNLClassifier). Model selection
-    // can be changed from the UI bottom sheet.
+    private val model = "mobilebert.tflite"
     private lateinit var bertClassifier: BertNLClassifier
-    private lateinit var nlClassifier: NLClassifier
-
-    private lateinit var executor: ScheduledThreadPoolExecutor
 
     init {
         initClassifier()
@@ -28,77 +22,18 @@ class TextClassificationHelper(
 
     fun initClassifier() {
         val baseOptionsBuilder = BaseOptions.builder()
-
-        // Use the specified hardware for running the model. Default to CPU.
-        // Possible to also use a GPU delegate, but this requires that the classifier be created
-        // on the same thread that is using the classifier, which is outside of the scope of this
-        // sample's design.
-        when (currentDelegate) {
-            DELEGATE_CPU -> {
-                // Default
-            }
-            DELEGATE_NNAPI -> {
-                baseOptionsBuilder.useNnapi()
-            }
-        }
-
         val baseOptions = baseOptionsBuilder.build()
+        val options = BertNLClassifier.BertNLClassifierOptions
+            .builder()
+            .setBaseOptions(baseOptions)
+            .build()
+        bertClassifier = BertNLClassifier.createFromFileAndOptions(context, model,options)
+    }
 
-        // Directions for generating both models can be found at
-        // https://www.tensorflow.org/lite/models/modify/model_maker/text_classification
-        if( currentModel == MOBILEBERT ) {
-            val options = BertNLClassifier.BertNLClassifierOptions
-                .builder()
-                .setBaseOptions(baseOptions)
-                .build()
-
-            bertClassifier = BertNLClassifier.createFromFileAndOptions(
-                context,
-                MOBILEBERT,
-                options)
-        } else if (currentModel == WORD_VEC) {
-            val options = NLClassifier.NLClassifierOptions.builder()
-                .setBaseOptions(baseOptions)
-                .build()
-
-            nlClassifier = NLClassifier.createFromFileAndOptions(
-                context,
-                WORD_VEC,
-                options)
+    suspend fun classify(text: String): Boolean {
+        val results = withContext(Dispatchers.IO) {
+            bertClassifier.classify(text)
         }
-    }
-
-    fun classify(text: String) {
-        executor = ScheduledThreadPoolExecutor(1)
-
-        executor.execute {
-            val results: List<Category>
-            // inferenceTime is the amount of time, in milliseconds, that it takes to
-            // classify the input text.
-            var inferenceTime = SystemClock.uptimeMillis()
-
-            // Use the appropriate classifier based on the selected model
-            if(currentModel == MOBILEBERT) {
-                results = bertClassifier.classify(text)
-            } else {
-                results = nlClassifier.classify(text)
-            }
-
-            inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-
-            listener.onResult(results, inferenceTime)
-        }
-    }
-
-    interface TextResultsListener {
-        fun onError(error: String)
-        fun onResult(results: List<Category>, inferenceTime: Long)
-    }
-
-    companion object {
-        const val DELEGATE_CPU = 0
-        const val DELEGATE_NNAPI = 1
-        const val WORD_VEC = "wordvec.tflite"
-        const val MOBILEBERT = "mobilebert.tflite"
+        return results[1].score > results[0].score
     }
 }

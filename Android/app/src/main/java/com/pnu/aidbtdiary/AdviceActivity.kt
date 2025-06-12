@@ -4,102 +4,154 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
-import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.Translation
-import com.google.mlkit.nl.translate.TranslatorOptions
+import com.pnu.aidbtdiary.adapter.EmotionAdapter
 import com.pnu.aidbtdiary.dao.AppDatabase
 import com.pnu.aidbtdiary.dao.DbtDiaryDao
 import com.pnu.aidbtdiary.databinding.ActivityAdviceBinding
 import com.pnu.aidbtdiary.dto.DbtDiaryForm
 import com.pnu.aidbtdiary.helper.AppDatabaseHelper
+import com.pnu.aidbtdiary.helper.EnglishTranslationHelper
 import com.pnu.aidbtdiary.helper.PromptTemplateHelper
 import com.pnu.aidbtdiary.helper.TextClassificationHelper
 import com.pnu.aidbtdiary.network.OpenAiClient
 import kotlinx.coroutines.launch
-import org.tensorflow.lite.support.label.Category
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDate
 
 class AdviceActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdviceBinding
+
     private lateinit var db: AppDatabase
     private lateinit var dao: DbtDiaryDao
+
+    private lateinit var textClassificationHelper: TextClassificationHelper
+    private lateinit var emotionAdapter: EmotionAdapter
+    private lateinit var toast: Toast
+
+    private lateinit var translationHelper: EnglishTranslationHelper
     private lateinit var openAiClient: OpenAiClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdviceBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         db = AppDatabaseHelper.getDatabase(this)
         dao = db.dbtDiaryDao()
-        openAiClient = OpenAiClient()
+        textClassificationHelper = TextClassificationHelper(this)
+        emotionAdapter = EmotionAdapter(this)
+        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
 
-        setContentView(binding.root)
         initDebug()
-        // EntryActivity에서 전달된 데이터
-        val dbtDiaryForm = DbtDiaryForm(LocalDate.now())
-        dbtDiaryForm.situation = intent.getStringExtra("situation") ?: ""
-        dbtDiaryForm.emotion = intent.getStringExtra("emotionType") ?: ""
-        dbtDiaryForm.intensity = intent.getIntExtra("intensity", -1)
-        dbtDiaryForm.thought = intent.getStringExtra("thought") ?: ""
-        dbtDiaryForm.behavior = intent.getStringExtra("reaction") ?: ""
-
-         binding.tvAdviceContent.text = "여기에 AI 조언이 표시됩니다."
+        val dbtDiaryForm = getDbtFormFromIntent()
 
         binding.btnGetAdvice.setOnClickListener {
-            // AI 조언 요청 로직
-            // 예시: OpenAI API 호출하여 조언 가져오기
-            binding.tvAdviceContent.text = "AI 조언을 가져오는 중..."
+            binding.tvAdviceContent.setText("AI 조언을 가져오는 중...")
+
+            if (::openAiClient.isInitialized.not()) openAiClient = OpenAiClient()
             lifecycleScope.launch {
-                binding.btnGetAdvice.isEnabled = false
-                val advice = getAdviceFromOpenAI(dbtDiaryForm)
-                binding.tvAdviceContent.text = advice
-                binding.btnGetAdvice.isEnabled = true
+                try {
+                    binding.btnGetAdvice.isEnabled = false
+                    val advice = getAdviceFromOpenAI(dbtDiaryForm)
+                    binding.tvAdviceContent.text = advice
+                } catch (e: Exception) {
+                    binding.tvAdviceContent.setText("AI 조언을 가져오는 데 실패했습니다: ${e.message}")
+                    binding.btnGetAdvice.isEnabled = true
+                }
             }
         }
-
         binding.btnSaveResponse.setOnClickListener {
+            binding.btnSaveResponse.isEnabled = false
+
             val dbtSkill = binding.etDbtSkill.text.toString()
+            val userResponse = binding.etUserResponse.text.toString()
 
             if (dbtSkill.isBlank()) {
                 binding.etUserResponse.error = "dbtSkill을 입력하세요."
                 return@setOnClickListener
             }
-
-            binding.btnSaveResponse.isEnabled = false
-
             dbtDiaryForm.dbtSkill = dbtSkill
+            dbtDiaryForm.solution = userResponse
+            val targetText = dbtDiaryForm.situation
 
-            val textClassificationHelper = TextClassificationHelper(
-                context = this,
-                listener = object : TextClassificationHelper.TextResultsListener {
-                    override fun onError(error: String) {
-                        binding.btnSaveResponse.error = "분석 중 오류 발생: $error"
-                        binding.btnSaveResponse.isEnabled = true
-                    }
-                    override fun onResult(results: List<Category>, inferenceTime: Long) {
-                        dbtDiaryForm.sentiment = results[1].score > 0.5f
-                        dbtDiaryForm.solution = binding.etUserResponse.text.toString()
+            lifecycleScope.launch {
+                if (isEnglish(targetText)) {
+                    dbtDiaryForm.sentiment = textClassificationHelper.classify(targetText)
+                } else if (hasKorean(targetText)) {
+                    try {
+                        if (!::translationHelper.isInitialized) {
+                            translationHelper = EnglishTranslationHelper()
 
-                        dbtDiaryForm.toEntity().let { dbtDiary ->
-                            lifecycleScope.launch {
-                                dao.insert(dbtDiary)
-                                Snackbar.make(
-                                    binding.root,
-                                    "일기가 저장되었습니다.",
-                                    Snackbar.LENGTH_LONG
-                                ).show()
-                                finish() // 일기 저장 후 Activity 종료
+                        }
+                        if (!translationHelper.checkIfModelDownloaded()) {
+                            val dialRes = getAnswerFromDialog()
+                            when (dialRes) {
+                                ResponseType.CONFIRM -> {
+                                    toast.setText("번역 모델을 다운로드 중입니다...")
+                                    toast.show()
+                                    translationHelper.downloadModel()
+                                    toast.cancel()
+                                    toast = Toast.makeText(this@AdviceActivity, "번역 모델 다운로드 완료!", Toast.LENGTH_SHORT)
+                                    toast.show()
+                                    dbtDiaryForm.sentiment =
+                                        textClassificationHelper.classify(dbtDiaryForm.situation)
+                                }
+
+                                ResponseType.CANCEL -> {
+                                    dbtDiaryForm.sentiment =
+                                        emotionAdapter.getSentimentByEmotion(dbtDiaryForm.emotion)
+                                }
+
+                                ResponseType.CLOSE -> {
+                                    binding.btnSaveResponse.isEnabled = true
+                                    return@launch
+                                }
                             }
                         }
+
+                    } catch (e: Exception) {
+                        dbtDiaryForm.sentiment =
+                            emotionAdapter.getSentimentByEmotion(dbtDiaryForm.emotion)
                     }
                 }
-            )
-            analysisSentiment(dbtDiaryForm) { translatedText ->
-                textClassificationHelper.classify(translatedText)
+                dao.insert(dbtDiaryForm.toEntity())
+                finish()
             }
         }
+    }
+
+    private fun getDbtFormFromIntent(): DbtDiaryForm {
+        val date = LocalDate.now()
+        val form = DbtDiaryForm(date)
+        form.situation = intent.getStringExtra("situation") ?: ""
+        form.emotion = intent.getStringExtra("emotionType") ?: ""
+        form.intensity = intent.getIntExtra("intensity", -1)
+        form.thought = intent.getStringExtra("thought") ?: ""
+        form.behavior = intent.getStringExtra("reaction") ?: ""
+        return form
+    }
+
+    private fun isEnglish(text: String): Boolean {
+        return text.all { it.isLetter() || it.isWhitespace() || it.isDigit() }
+    }
+
+    private fun hasKorean(text: String): Boolean {
+        return text.any { it in '\uAC00'..'\uD7AF' }
+    }
+
+    enum class ResponseType {
+        CONFIRM, CANCEL, CLOSE
+    }
+
+    private suspend fun getAnswerFromDialog(): ResponseType = suspendCancellableCoroutine { cont ->
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("모델 다운로드 필요")
+            .setMessage("좀 더 정확한 감정 분석을 위해 번역 모델을 다운로드해야 합니다. 다운로드하시겠습니까?")
+            .setPositiveButton("다운로드") { _, _ -> cont.resume(ResponseType.CONFIRM, onCancellation = null) }
+            .setNegativeButton("그냥 저장") { _, _ -> cont.resume(ResponseType.CANCEL, onCancellation = null) }
+            .setOnCancelListener { cont.resume(ResponseType.CLOSE, onCancellation = null) }
+            .show()
     }
 
     private suspend fun getAdviceFromOpenAI(dbtDiaryForm: DbtDiaryForm): String {
@@ -118,46 +170,8 @@ class AdviceActivity : AppCompatActivity() {
         }
     }
 
-    private fun isEnglish(text: String): Boolean {
-        return text.all { it.isLetter() || it.isWhitespace() || it.isDigit() }
-    }
-
-    private fun analysisSentiment(form: DbtDiaryForm, callback: (String) -> Unit) {
-        if (isEnglish(form.situation)) return callback(form.situation);
-
-        val translator = Translation.getClient(
-            TranslatorOptions.Builder()
-                .setSourceLanguage(TranslateLanguage.KOREAN)
-                .setTargetLanguage(TranslateLanguage.ENGLISH).build()
-        )
-
-        val conditions = DownloadConditions.Builder()
-            .requireWifi()
-            .build()
-
-        translator.downloadModelIfNeeded(conditions)
-            .addOnSuccessListener {
-                translator.translate(form.situation)
-                    .addOnSuccessListener { translatedText ->
-                        callback(translatedText)
-                        translator.close()
-                    }
-                    .addOnFailureListener { e ->
-                        Snackbar.make(binding.root, "번역 실패: ${e.message}", Snackbar.LENGTH_LONG).show()
-                        callback(form.emotion)
-                        translator.close()
-                    }
-            }
-            .addOnFailureListener { e ->
-                Snackbar.make(binding.root, "모델 다운로드 실패: ${e.message}", Snackbar.LENGTH_LONG).show()
-                callback(form.emotion)
-                translator.close()
-            }
-    }
-
     private fun initDebug() {
         binding.etDbtSkill.setText("마음읽기")
         binding.etUserResponse.setText("상대방의 마음을 이해하려고 노력했어요. 그 사람의 입장에서 생각해보니, 그 사람도 힘든 상황이었을 것 같아요. 그래서 더 이상 화내지 않기로 했어요.")
     }
 }
-
