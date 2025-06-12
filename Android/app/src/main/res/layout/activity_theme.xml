@@ -1,27 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnDefaultTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="기본 테마" />
+    <!-- 뒤로 가기 -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="54dp"
+        android:layout_height="45dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="이전 화면으로 돌아가기"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnGalleryTheme"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvThemeTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="갤러리에서 사진 선택"
-        android:layout_marginTop="8dp" />
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="16dp"
+        android:text="테마 선택"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnSync"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/llThemeSwatches"
+        android:layout_width="289dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvThemeTitle">
+
+        <!-- 색상 테마 선택 -->
+        <View
+            android:id="@+id/viewThemeGreen"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/themeGreen"
+            android:clickable="true" />
+
+        <View
+            android:id="@+id/viewThemePink"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/themePink"
+            android:clickable="true" />
+
+        <View
+            android:id="@+id/viewThemeBlue"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/themeBlue"
+            android:clickable="true" />
+
+        <View
+            android:id="@+id/viewThemeYellow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/themeYellow"
+            android:clickable="true" />
+
+        <!-- 갤러리 아이콘 스와치 -->
+        <ImageButton
+            android:id="@+id/btnGallerySwatch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="사용자 지정 테마"
+            android:src="@drawable/ic_gallery" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectCustomTheme"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/entryCardBackground"
+        android:text="사용자 지정 테마 선택"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llThemeSwatches" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSyncCloud"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="264dp"
+        android:backgroundTint="@color/themeBlue"
         android:text="클라우드 동기화"
-        android:layout_marginTop="8dp" />
-</LinearLayout>
+        android:textColor="@color/black"
+        app:icon="@drawable/ic_cloud_sync"
+        app:iconGravity="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSelectCustomTheme" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

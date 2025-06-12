@@ -29,6 +29,7 @@ class EmotionAdapter(
         textView.text = emotions[position].first
         return textView
     }
+
     fun getSentimentByEmotion(emotion: String): Boolean {
         return emotions.find { it.first == emotion }?.second == true
     }

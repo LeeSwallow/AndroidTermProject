@@ -2,4 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="entryCardBackground">#E8F5E9</color>   <!-- 연한 그린 -->
+    <color name="historyCardBackground">#E3F2FD</color> <!-- 연한 블루 -->
+
+    <!-- 설정(플로팅 버튼) 배경 -->
+    <color name="settingsButtonBackground">#FFCDD2</color> <!-- 연한 핑크 -->
+
+    <!-- 테마 스와치 색상 -->
+    <color name="themeGreen">#A5D6A7</color>  <!-- 중간 그린 -->
+    <color name="themePink">#F8BBD0</color>   <!-- 중간 핑크 -->
+    <color name="themeBlue">#90CAF9</color>   <!-- 중간 블루 -->
+    <color name="themeYellow">#FFF59D</color> <!-- 중간 옐로우 -->
+
+    <!-- 입력 필드·스피너 배경 (만약 사용하신다면) -->
+    <color name="inputBackground">#FFFFFF</color>      <!-- 흰색 -->
+    <color name="spinnerBackground">#F5F5F5</color>    <!-- 연회색 -->
+
+    <!-- AI 조언 텍스트 배경 등 -->
+    <color name="adviceBackground">#FAFAFA</color>     <!-- 아주 연한 회색 -->
 </resources>

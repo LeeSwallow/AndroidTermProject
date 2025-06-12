@@ -24,18 +24,10 @@ class ThemeActivity : AppCompatActivity() {
 
         NotificationUtil.createChannel(applicationContext)
         syncHelper = SyncHelper(applicationContext)
-        binding.btnDefaultTheme.setOnClickListener {
-            // 기본 테마로 변경
-        }
-
-        binding.btnGalleryTheme.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
-        }
 
 
-        binding.btnSync.setOnClickListener {
+
+        binding.btnSyncCloud.setOnClickListener {
             GlobalScope.launch {
                 syncHelper.syncDiaries()
             }

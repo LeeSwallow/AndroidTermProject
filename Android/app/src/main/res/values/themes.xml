@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.AiDbtDiary" parent="Base.Theme.AiDbtDiary" />
+    <style name="Theme.Tpdf" parent="Base.Theme.AiDbtDiary" />
 </resources>

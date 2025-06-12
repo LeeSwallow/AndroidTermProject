@@ -1,28 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnTodayEntry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="오늘의 감정카드 작성하기" />
+    <!-- 상단 날짜 헤더 -->
 
-    <Button
-        android:id="@+id/btnViewDiary"
-        android:layout_width="match_parent"
+    <!-- 오늘의 감정 카드 작성 -->
+    <TextView
+        android:id="@+id/tvDateHeader"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="일기 조회하기"
-        android:layout_marginTop="8dp" />
+        android:layout_marginStart="108dp"
+        android:text="2022-xx-xx(월)"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardEntry"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:onClick="onEntryClick"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/entryCardBackground"
+        app:layout_constraintTop_toBottomOf="@id/tvDateHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/ivEntryIcon"
+                android:layout_width="51dp"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_emotion_card" />
+
+            <TextView
+                android:id="@+id/tvEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_toEndOf="@id/ivEntryIcon"
+                android:text="오늘의 감정 카드 작성"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivPlus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_plus"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 일기 조회하기 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardHistory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="onHistoryClick"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/historyCardBackground"
+        app:layout_constraintTop_toBottomOf="@id/cardEntry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/ivHistoryIcon"
+                android:layout_width="54dp"
+                android:layout_height="51dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_calendar" />
+
+            <TextView
+                android:id="@+id/tvHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="58dp"
+                android:layout_toEndOf="@id/ivHistoryIcon"
+                android:text="일기 조회하기"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 설정 버튼 -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnSettings"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="설정"
-        android:layout_marginTop="8dp" />
+        android:contentDescription="설정"
+        android:src="@drawable/ic_settings"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

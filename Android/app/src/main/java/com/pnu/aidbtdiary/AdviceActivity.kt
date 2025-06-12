@@ -64,14 +64,13 @@ class AdviceActivity : AppCompatActivity() {
         binding.btnSaveResponse.setOnClickListener {
             binding.btnSaveResponse.isEnabled = false
 
-            val dbtSkill = binding.etDbtSkill.text.toString()
             val userResponse = binding.etUserResponse.text.toString()
-
-            if (dbtSkill.isBlank()) {
-                binding.etUserResponse.error = "dbtSkill을 입력하세요."
-                return@setOnClickListener
-            }
-            dbtDiaryForm.dbtSkill = dbtSkill
+//
+//            if (dbtSkill.isBlank()) {
+//                binding.etUserResponse.error = "dbtSkill을 입력하세요."
+//                return@setOnClickListener
+//            }
+            dbtDiaryForm.dbtSkill = "마음읽기"
             dbtDiaryForm.solution = userResponse
             val targetText = dbtDiaryForm.situation
 
@@ -170,7 +169,7 @@ class AdviceActivity : AppCompatActivity() {
     }
 
     private fun initDebug() {
-        binding.etDbtSkill.setText("마음읽기")
+//        binding.etDbtSkill.setText("마음읽기")
         binding.etUserResponse.setText("상대방의 마음을 이해하려고 노력했어요. 그 사람의 입장에서 생각해보니, 그 사람도 힘든 상황이었을 것 같아요. 그래서 더 이상 화내지 않기로 했어요.")
     }
 }

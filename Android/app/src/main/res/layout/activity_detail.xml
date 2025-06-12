@@ -1,29 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
+
+        <!-- 이전 화면으로 돌아가기 -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="57dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="이전 화면으로 돌아가기"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- JSON 다운로드 버튼 -->
+        <ImageButton
+            android:id="@+id/btnDownloadJson"
+            android:layout_width="46dp"
+            android:layout_height="61dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="카드 JSON 다운로드"
+            android:src="@drawable/ic_download"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 날짜 -->
+
+        <!-- 상황 -->
 
         <TextView
             android:id="@+id/tvDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="8dp"
             android:text="2025-06-07"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textSize="16sp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
         <TextView
             android:id="@+id/tvSituation"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="24dp"
+            android:text="상황: ..."
+            app:layout_constraintTop_toBottomOf="@id/tvDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- 감정, 강도, 생각, 반응, 대응 각각 TextView로 구성 -->
+        <!-- 감정 -->
+        <TextView
+            android:id="@+id/tvEmotion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="감정: ..."
+            app:layout_constraintTop_toBottomOf="@id/tvSituation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+        <!-- 강도 -->
+        <TextView
+            android:id="@+id/tvIntensity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="강도: ..."
+            app:layout_constraintTop_toBottomOf="@id/tvEmotion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 생각 -->
+        <TextView
+            android:id="@+id/tvThought"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="생각: ..."
+            app:layout_constraintTop_toBottomOf="@id/tvIntensity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 반응 -->
+        <TextView
+            android:id="@+id/tvReaction"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="반응: ..."
+            app:layout_constraintTop_toBottomOf="@id/tvThought"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 나의 대응 -->
+        <TextView
+            android:id="@+id/tvUserResponse"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="나의 대응: ..."
+            app:layout_constraintTop_toBottomOf="@id/tvReaction"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -21,7 +21,8 @@ class DiaryListActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.rvDiarySummary.layoutManager = LinearLayoutManager(this)
+//        binding.rvDiarySummary.layoutManager = LinearLayoutManager(this)
         // TODO: 어댑터 설정하여 간단 요약(긍정/부정 아이콘 등) 표시
+
     }
 }

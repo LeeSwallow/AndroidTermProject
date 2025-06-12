@@ -1,52 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
+    <!-- 뒤로 가기 -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="이전 화면으로 돌아가기"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- 제목 -->
     <TextView
-        android:id="@+id/tvAdvicePrompt"
-        android:layout_width="match_parent"
+        android:id="@+id/tvAdviceTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AI 조언"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:text="AI 조언 요청:"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnBack" />
 
-    <TextView
-        android:id="@+id/tvAdviceContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="로딩 중..." />
+    <!-- 조언 내용 -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvAdviceTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnGetAdvice">
 
+        <TextView
+            android:id="@+id/tvAdviceContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="로딩 중..."
+            />
+    </ScrollView>
+
+    <!-- 조언 받기 -->
     <Button
         android:id="@+id/btnGetAdvice"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="AI 조언 받기"
-        android:layout_marginTop="16dp" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="조언 받기"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/entryCardBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/etUserResponse" />
 
-    <EditText
-        android:id="@+id/etDbtSkill"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="dbt 기술을 입력하세요"
-        android:layout_marginTop="16dp" />
-
-
+    <!-- 내 대응 작성 -->
     <EditText
         android:id="@+id/etUserResponse"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="어떻게 대응하셨나요?"
-        android:layout_marginTop="16dp" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:hint="나의 대응 작성:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnSaveResponse" />
 
+    <!-- 작성 완료 -->
     <Button
         android:id="@+id/btnSaveResponse"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="저장"
-        android:layout_marginTop="16dp" />
+        android:layout_margin="16dp"
+        android:text="작성 완료"
+        android:backgroundTint="@color/entryCardBackground"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
