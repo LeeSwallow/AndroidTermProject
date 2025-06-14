@@ -4,6 +4,7 @@ import android.content.Context
 import com.pnu.aidbtdiary.dto.DbtDiaryRemote
 import com.pnu.aidbtdiary.entity.DbtDiary
 import com.pnu.aidbtdiary.network.SupaClient
+import com.pnu.aidbtdiary.utils.NotificationUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.security.SecureRandom

@@ -12,6 +12,10 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         val date = intent.getStringExtra("date")
         binding.tvDate.text = date
 

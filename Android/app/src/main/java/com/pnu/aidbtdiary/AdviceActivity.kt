@@ -117,6 +117,9 @@ class AdviceActivity : AppCompatActivity() {
                 finish()
             }
         }
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun getDbtFormFromIntent(): DbtDiaryForm {

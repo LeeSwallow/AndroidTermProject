@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pnu.aidbtdiary.databinding.ActivityThemeBinding
-import com.pnu.aidbtdiary.helper.NotificationUtil
+import com.pnu.aidbtdiary.utils.NotificationUtil
 import com.pnu.aidbtdiary.helper.SyncHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +25,9 @@ class ThemeActivity : AppCompatActivity() {
         NotificationUtil.createChannel(applicationContext)
         syncHelper = SyncHelper(applicationContext)
 
-
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
 
         binding.btnSyncCloud.setOnClickListener {
             GlobalScope.launch {

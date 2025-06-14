@@ -1,5 +1,6 @@
-package com.pnu.aidbtdiary.helper
+package com.pnu.aidbtdiary.utils
 
+import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -23,7 +24,7 @@ object NotificationUtil {
 
     fun notifySyncComplete(context: Context) {
         val builder = NotificationCompat.Builder(context.applicationContext, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_notify_sync)
+            .setSmallIcon(R.drawable.stat_notify_sync)
             .setContentTitle("동기화 완료")
             .setContentText("일기 동기화가 성공적으로 완료되었습니다.")
             .setAutoCancel(true)
@@ -34,7 +35,7 @@ object NotificationUtil {
 
     fun notifySyncError(context: Context, errorMessage: String) {
         val builder = NotificationCompat.Builder(context.applicationContext, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_notify_error)
+            .setSmallIcon(R.drawable.stat_notify_error)
             .setContentTitle("동기화 오류")
             .setContentText("일기 동기화 중 오류가 발생했습니다: $errorMessage")
             .setAutoCancel(true)
@@ -43,4 +44,3 @@ object NotificationUtil {
         manager.notify(2, builder.build())
     }
 }
-

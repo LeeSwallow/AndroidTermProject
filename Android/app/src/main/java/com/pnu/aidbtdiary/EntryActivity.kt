@@ -14,6 +14,10 @@ class EntryActivity : AppCompatActivity() {
         binding = EntryMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
     val emotions = listOf(
         // 긍정 감정
         "행복" to "happy",
