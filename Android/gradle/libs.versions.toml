@@ -45,7 +45,6 @@ tensorflow-lite-gpu-delegate-plugin = { module = "org.tensorflow:tensorflow-lite
 tensorflow-lite-task-text = { module = "org.tensorflow:tensorflow-lite-task-text", version.ref = "tensorflowLiteGpuDelegatePlugin" }
 translate = { module = "com.google.mlkit:translate", version.ref = "translate" }
 
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

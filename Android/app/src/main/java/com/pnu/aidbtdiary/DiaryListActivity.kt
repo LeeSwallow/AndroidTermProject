@@ -3,16 +3,21 @@ package com.pnu.aidbtdiary
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.pnu.aidbtdiary.dao.DbtDiaryDao
 import com.pnu.aidbtdiary.databinding.ActivityDiaryListBinding
+import com.pnu.aidbtdiary.helper.AppDatabaseHelper
+import kotlinx.datetime.LocalDate
 
 class DiaryListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDiaryListBinding
+    private lateinit var dao : DbtDiaryDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDiaryListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        dao = AppDatabaseHelper.getDatabase(applicationContext).dbtDiaryDao()
 
         binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val dateString = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
