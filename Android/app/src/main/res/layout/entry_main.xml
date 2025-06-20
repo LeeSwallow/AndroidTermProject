@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/rootLayout"
     android:layout_height="match_parent">
 
     <!-- 뒤로 가기 -->
@@ -114,8 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="다음"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@color/themeBlue"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/material_dynamic_neutral30"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

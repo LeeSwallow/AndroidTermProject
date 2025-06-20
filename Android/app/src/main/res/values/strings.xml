@@ -1,3 +1,11 @@
 <resources>
+    <string-array name="dbt_skill_prompt">
+        <item>마인드풀니스 (현재를 온전히 느끼기)</item>
+        <item>디스턴싱 (생각과 감정에서 거리 두기)</item>
+        <item>감정 조절 (강한 감정 다스리기)</item>
+        <item>대인관계 효율화 (관계에서 균형 잡기)</item>
+        <item>자기수용 (자신을 있는 그대로 받아들이기)</item>
+    </string-array>
+
     <string name="app_name">tpdf</string>
 </resources>

@@ -6,11 +6,12 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.pnu.aidbtdiary.databinding.EntryMainBinding
 
-class EntryActivity : AppCompatActivity() {
+class EntryActivity : BaseActivity() {
     private lateinit var binding: EntryMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         binding = EntryMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

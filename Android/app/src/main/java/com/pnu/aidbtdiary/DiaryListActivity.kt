@@ -12,7 +12,7 @@ import com.pnu.aidbtdiary.model.Sentiment
 import com.pnu.aidbtdiary.utils.CalendarUtils
 import java.time.YearMonth
 
-class DiaryListActivity : AppCompatActivity() {
+class DiaryListActivity : BaseActivity() {
     private lateinit var binding: ActivityDiaryListBinding
     private lateinit var dao : DbtDiaryDao
 
@@ -20,6 +20,7 @@ class DiaryListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         binding = ActivityDiaryListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
