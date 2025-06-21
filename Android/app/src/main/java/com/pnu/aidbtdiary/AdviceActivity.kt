@@ -40,6 +40,7 @@ class AdviceActivity : BaseActivity() {
         binding = ActivityAdviceBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.btnVoice.isEnabled = false
+        setSupportActionBar(binding.toolbar)
 
         // DB 초기화
         db = AppDatabaseHelper.getDatabase(this)
@@ -210,7 +211,6 @@ class AdviceActivity : BaseActivity() {
             "상대방의 마음을 이해하려고 노력했어요."
         )
     }
-
     private fun playAudioHelperIsPlaying(): Boolean {
         return try {
             val field = playAudioHelper.javaClass.getDeclaredField("isPlaying")

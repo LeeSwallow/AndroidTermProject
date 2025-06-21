@@ -3,7 +3,6 @@ package com.pnu.aidbtdiary
 import android.content.Intent
 import android.os.Bundle
 import java.time.LocalDate
-import androidx.appcompat.app.AppCompatActivity
 import com.pnu.aidbtdiary.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
@@ -13,6 +12,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         binding.tvDateHeader.text =  LocalDate.now().toString()
 

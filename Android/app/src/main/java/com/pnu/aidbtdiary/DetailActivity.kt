@@ -15,10 +15,11 @@ class DetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_detail)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         dao = AppDatabaseHelper.getDatabase(this).dbtDiaryDao()
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         binding.btnBack.setOnClickListener {
             finish()
@@ -40,6 +41,5 @@ class DetailActivity : BaseActivity() {
                 binding.tvUserResponse .text = diary.solution
             }
         }
-        // TODO: DB에서 해당 날짜 일기 불러와서 각 TextView에 표시
     }
 }

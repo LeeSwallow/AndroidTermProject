@@ -25,6 +25,8 @@ class DiaryListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDiaryListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
         dao = AppDatabaseHelper.getDatabase(applicationContext).dbtDiaryDao()
 
         binding.btnBack.setOnClickListener {

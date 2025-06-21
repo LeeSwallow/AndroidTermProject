@@ -14,7 +14,7 @@ class EntryActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         binding = EntryMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        setSupportActionBar(binding.toolbar)
         binding.btnBack.setOnClickListener {
             finish()
         }

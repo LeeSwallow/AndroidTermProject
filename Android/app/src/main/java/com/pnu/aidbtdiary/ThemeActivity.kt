@@ -36,8 +36,7 @@ class ThemeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityThemeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // onResume()에서 자동으로 applyTheme 호출되므로, onCreate에서는 초기화 후 별도 호출 불필요
+        setSupportActionBar(binding.toolbar)
 
         // SyncHelper 초기화
         syncHelper = SyncHelper(this)

@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <!-- 뒤로 가기 -->
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="54dp"
-        android:layout_height="45dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="이전 화면으로 돌아가기"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <!-- 테마 선택 제목 -->
-    <TextView
-        android:id="@+id/tvThemeTitle"
-        android:layout_width="wrap_content"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:title="@string/app_name"
+            app:titleTextColor="@android:color/black">
+
+            <!-- 이전 화면으로 돌아가기 -->
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="이전 화면으로 돌아가기"
+                android:src="@drawable/ic_arrow_back" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:text="환경 설정"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="16dp"
-        android:text="테마 선택"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_margin="16dp"
+        android:layout_marginTop="32dp"
+    >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="테마 설정:"
+        android:textSize="18sp"
+        android:layout_margin="16dp"
+        android:textStyle="bold"/>
     <!-- 색상 & 이미지 스와치 -->
     <LinearLayout
         android:id="@+id/llThemeSwatches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvThemeTitle">
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
         <!-- 그린 테마 -->
         <com.google.android.material.button.MaterialButton
@@ -47,7 +69,6 @@
             style="?attr/materialIconButtonStyle"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
             app:cornerRadius="20dp"
             android:backgroundTint="@color/white"
             android:contentDescription="Green Theme" />
@@ -96,50 +117,49 @@
             android:src="@drawable/ic_gallery" />
 
     </LinearLayout>
-
     <!-- 사용자 지정 테마 선택 버튼 -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSelectCustomTheme"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_margin="16dp"
         android:backgroundTint="@color/material_dynamic_neutral80"
         android:text="사용자 지정 테마 선택"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llThemeSwatches" />
+        android:textColor="@color/black" />
+    </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- 클라우드 동기화 버튼 -->
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDownloadJson"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="340dp"
         android:backgroundTint="@color/material_dynamic_neutral20"
         android:text="JSON형식 다운로드"
         android:textColor="@color/white"
         app:icon="@drawable/ic_json_download"
-        app:iconGravity="textStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSelectCustomTheme" />
+        app:iconGravity="textStart" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSyncCloud"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="420dp"
         android:backgroundTint="@color/material_dynamic_neutral40"
         android:text="클라우드 동기화"
         android:textColor="@color/white"
         app:icon="@drawable/ic_cloud_sync"
-        app:iconGravity="textStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSelectCustomTheme" />
+        app:iconGravity="textStart" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="16dp" />
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
