@@ -37,9 +37,15 @@ android {
 
         val properties = Properties()
         properties.load(file("env.properties").inputStream())
-        buildConfigField("String", "OPENAI_MODEL", "\"gpt-4.1-mini-2025-04-14\"")
         buildConfigField("String", "OPENAI_BASE_URL", "\"https://api.openai.com/v1/\"")
+        buildConfigField("String", "GEMINI_BASE_URL", "\"https://generativelanguage.googleapis.com/v1beta/\"")
+
+        buildConfigField("String", "OPENAI_MODEL", "\"gpt-4.1-mini-2025-04-14\"")
+        buildConfigField("String", "GEMINI_MODEL", "\"gemini-2.0-flash\"")
+
         buildConfigField("String", "OPENAI_API_KEY", '"' + properties.getProperty("OPENAI_API_KEY") + '"')
+        buildConfigField("String", "GEMINI_API_KEY", '"' + properties.getProperty("GEMINI_API_KEY") + '"')
+
         buildConfigField("String", "SUPABASE_URL", '"' + properties.getProperty("SUPABASE_PROJECT_URL") + '"')
         buildConfigField("String", "SUPABASE_KEY", '"' + properties.getProperty("SUPABASE_ANON_KEY") + '"')
     }
@@ -123,4 +129,5 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.ktor:ktor-client-okhttp:3.1.3")
+    testImplementation(kotlin("test"))
 }

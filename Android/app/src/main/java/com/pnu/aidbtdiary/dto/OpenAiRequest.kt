@@ -1,6 +1,6 @@
 package com.pnu.aidbtdiary.dto
 
-data class CompletionRequest(
+data class OpenAiRequest(
     val model: String,
     val messages: List<Message>
 )
