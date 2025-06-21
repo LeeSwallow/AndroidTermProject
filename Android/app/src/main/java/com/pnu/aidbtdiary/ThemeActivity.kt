@@ -2,16 +2,14 @@ package com.pnu.aidbtdiary
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.pnu.aidbtdiary.BaseActivity
 import com.pnu.aidbtdiary.dao.DbtDiaryDao
 import com.pnu.aidbtdiary.databinding.ActivityThemeBinding
 import com.pnu.aidbtdiary.entity.DbtDiary
@@ -80,7 +78,11 @@ class ThemeActivity : BaseActivity() {
         binding.btnDownloadJson.setOnClickListener {
             lifecycleScope.launch {
                 val dbtList: List<DbtDiary> = dao.getAll()
-                downloadHelper.downloadDbtDiaryToJson(dbtList)
+                downloadHelper.downloadDbtDiaryToJson(dbtList) { success, message ->
+                    runOnUiThread {
+                        Toast.makeText(this@ThemeActivity, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }

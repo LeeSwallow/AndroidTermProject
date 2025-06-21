@@ -155,12 +155,13 @@ class AdviceActivity : BaseActivity() {
                             translationHelper.downloadModel()
                             toast.cancel()
                             toast.setText("번역 모델 다운로드 완료")
-                            textClassificationHelper.classify(text)
+                            toast.show()
+                            textClassificationHelper.classify(translationHelper.translateToEnglish(text))
                         }
                         ResponseType.CANCEL -> emotionAdapter.getSentimentByEmotion(form.emotion)
                         ResponseType.CLOSE -> return
                     }
-                } else textClassificationHelper.classify(text)
+                } else textClassificationHelper.classify(translationHelper.translateToEnglish(text))
 
             }
             else -> emotionAdapter.getSentimentByEmotion(form.emotion)

@@ -1,16 +1,17 @@
 package com.pnu.aidbtdiary
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.pnu.aidbtdiary.adapter.CalendarAdapter
 import com.pnu.aidbtdiary.dao.DbtDiaryDao
 import com.pnu.aidbtdiary.databinding.ActivityDiaryListBinding
 import com.pnu.aidbtdiary.helper.AppDatabaseHelper
-import com.pnu.aidbtdiary.model.Sentiment
+import com.pnu.aidbtdiary.helper.FsHelper
 import com.pnu.aidbtdiary.utils.CalendarUtils
 import kotlinx.coroutines.launch
 import java.time.YearMonth
@@ -18,6 +19,24 @@ import java.time.YearMonth
 class DiaryListActivity : BaseActivity() {
     private lateinit var binding: ActivityDiaryListBinding
     private lateinit var dao : DbtDiaryDao
+
+    private val fsHelper by lazy { FsHelper(this) }
+    private val jsonFilePicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+        if (uri != null) {
+            fsHelper.importDbtDiaryListFromJson(this, uri, onSuccess = { diaries ->
+                lifecycleScope.launch {
+                    fsHelper.syncToLocal(diaries, onSuccess = {
+                        Toast.makeText(this@DiaryListActivity, "파일 읽기 성공: ${diaries.size}개의 일기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                        loadCalendar() // 새로고침
+                    }, onError = {
+                        Toast.makeText(this@DiaryListActivity, "파일 읽기 실패: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    })
+                }
+            }, onError = {
+                Toast.makeText(this, "파일 읽기 실패: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+            })
+        }
+    }
 
     private var currentYearMonth: YearMonth = YearMonth.now()
 
@@ -46,6 +65,10 @@ class DiaryListActivity : BaseActivity() {
             currentYearMonth = currentYearMonth.plusMonths(1)
             updateMonthText()
             loadCalendar()
+        }
+
+        binding.btnLoadJson.setOnClickListener {
+            jsonFilePicker.launch(arrayOf("application/json"))
         }
 
         // 달력 로드

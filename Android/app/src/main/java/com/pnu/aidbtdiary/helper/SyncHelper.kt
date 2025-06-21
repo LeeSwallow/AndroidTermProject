@@ -7,7 +7,6 @@ import com.pnu.aidbtdiary.network.SupaClient
 import com.pnu.aidbtdiary.utils.NotificationUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -18,7 +17,6 @@ class SyncHelper(private val context: Context) {
     fun remoteToLocal(from: List<DbtDiaryRemote>): List<DbtDiary> {
         return from.map {
             DbtDiary(
-                id = it.id,
                 date = LocalDate.parse(it.date),
                 situation = it.situation,
                 emotion = it.emotion,
@@ -37,7 +35,6 @@ class SyncHelper(private val context: Context) {
     fun localToRemote(from: List<DbtDiary>): List<DbtDiaryRemote> {
         return from.map {
             DbtDiaryRemote(
-                id = it.id,
                 date = it.date.toString(),
                 situation = it.situation,
                 emotion = it.emotion,
@@ -89,9 +86,9 @@ class SyncHelper(private val context: Context) {
         val resultCreate2 = mutableListOf<DbtDiary>()
         val resultUpdate2 = mutableListOf<DbtDiary>()
 
-        val searchMap = diaries1.associateBy { it.id }.toMutableMap()
+        val searchMap = diaries1.associateBy { it.date }.toMutableMap()
         for (diary in diaries2) {
-            val baseDiary = searchMap[diary.id]
+            val baseDiary = searchMap[diary.date]
             if (baseDiary == null) {
                 resultCreate1.add(diary)
             } else {
@@ -100,7 +97,7 @@ class SyncHelper(private val context: Context) {
                 } else if (baseDiary.updatedAt.isAfter(diary.updatedAt)) {
                     resultUpdate2.add(baseDiary)
                 }
-                searchMap.remove(diary.id)
+                searchMap.remove(diary.date)
             }
         }
 

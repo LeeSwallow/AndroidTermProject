@@ -19,8 +19,10 @@ interface DbtDiaryDao {
     @Query("SELECT * FROM dbt_diary WHERE deleted = 0")
     suspend fun getAll(): List<DbtDiary>
 
+
     @Query("SELECT * FROM dbt_diary WHERE date = :date AND deleted = 0")
     suspend fun getByDate(date: LocalDate): DbtDiary?
+
 
     @Query("SELECT * FROM dbt_diary WHERE date >= :startDate AND date <= :endDate AND deleted = 0")
     suspend fun getAllBetweenDates(startDate: LocalDate, endDate: LocalDate): List<DbtDiary>

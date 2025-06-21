@@ -1,6 +1,5 @@
 package com.pnu.aidbtdiary.helper
 
-import android.app.DownloadManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
@@ -10,42 +9,73 @@ import android.provider.MediaStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pnu.aidbtdiary.entity.DbtDiary
-import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class FsHelper(private val context: Context) {
 
-    private data class DbtDiaryListWrapper(
-        val contents: List<DbtDiary>
+    private data class DbtDiaryWrapper(
+        val date: String,
+        val situation: String,
+        val emotion: String,
+        val intensity: Int,
+        val thought: String,
+        val behavior: String,
+        val dbtSkill: String,
+        val solution: String,
+        val deleted: Boolean,
+        val sentiment: Boolean,
+        val createdAt: String,
+        val updatedAt: String
     )
 
-    private fun exportDbtDiaryListToJson(diaryList: List<DbtDiary>): Uri? {
-        val gson = Gson()
-        val wrapper = DbtDiaryListWrapper(diaryList)
-        val jsonString = gson.toJson(wrapper)
 
-        val fileName = "export_" + LocalDateTime.now().toString() + ".json"
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
-        FileOutputStream(file).use { it.write(jsonString.toByteArray()) }
-        return Uri.fromFile(file)
+    private data class DbtDiaryListWrapper(
+        val contents: List<DbtDiaryWrapper>
+    )
+
+    private fun fromDbtDiaryTOWrapper(diary: DbtDiary): DbtDiaryWrapper {
+        return DbtDiaryWrapper(
+            date = diary.date.toString(),
+            situation = diary.situation,
+            emotion = diary.emotion,
+            intensity = diary.intensity,
+            thought = diary.thought,
+            behavior = diary.behavior,
+            dbtSkill = diary.dbtSkill,
+            solution = diary.solution,
+            deleted = diary.deleted,
+            sentiment = diary.sentiment,
+            createdAt = diary.createdAt.toString(),
+            updatedAt = diary.updatedAt.toString()
+        )
     }
-
-    fun saveSpeechToMp3(response : ResponseBody, fileName: String): File {
-        val file = File(context.filesDir, fileName)
-        response.byteStream().use { input ->
-            FileOutputStream(file).use { output ->
-                input.copyTo(output)
-            }
-        }
-        return file
+    private fun fromWrapperToDbtDiary(wrapper: DbtDiaryWrapper): DbtDiary {
+        return DbtDiary(
+            date = LocalDate.parse(wrapper.date, DateTimeFormatter.ISO_DATE),
+            situation = wrapper.situation,
+            emotion = wrapper.emotion,
+            intensity = wrapper.intensity,
+            thought = wrapper.thought,
+            behavior = wrapper.behavior,
+            dbtSkill = wrapper.dbtSkill,
+            solution = wrapper.solution,
+            deleted = wrapper.deleted,
+            sentiment = wrapper.sentiment,
+            createdAt = LocalDateTime.parse(wrapper.createdAt, DateTimeFormatter.ISO_DATE_TIME),
+            updatedAt = LocalDateTime.parse(wrapper.updatedAt, DateTimeFormatter.ISO_DATE_TIME)
+        )
     }
 
     fun downloadDbtDiaryToJson(diaries: List<DbtDiary>, onResult: (Boolean, String) -> Unit = { _, _ -> }) {
         val gson = Gson()
-        val wrapper = DbtDiaryListWrapper(diaries)
+        val wrapper = DbtDiaryListWrapper(
+            contents = diaries.map { fromDbtDiaryTOWrapper(it) }
+        )
         val jsonString = gson.toJson(wrapper)
         val fileName = "export_" + LocalDateTime.now().toString().replace(":", "-") + ".json"
 
@@ -89,8 +119,20 @@ class FsHelper(private val context: Context) {
                 val reader = InputStreamReader(inputStream)
                 val type = object : TypeToken<DbtDiaryListWrapper>() {}.type
                 val wrapper = Gson().fromJson<DbtDiaryListWrapper>(reader, type)
-                onSuccess(wrapper.contents)
+                onSuccess(wrapper.contents.map { fromWrapperToDbtDiary(it) })
             } ?: onError(Exception("파일을 열 수 없습니다."))
+        } catch (e: Exception) {
+            onError(e)
+        }
+    }
+
+    suspend fun syncToLocal(diaries: List<DbtDiary>, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        try {
+            val db = AppDatabaseHelper.getDatabase(context)
+            val dao = db.dbtDiaryDao()
+            dao.insertAll(diaries)
+            onSuccess()
+
         } catch (e: Exception) {
             onError(e)
         }

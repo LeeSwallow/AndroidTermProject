@@ -21,21 +21,9 @@ class DbtDiaryForm {
     }
 
     fun isValid(): Boolean {
-        return situation.isNotEmpty() && emotion.isNotEmpty() && intensity >= 0;
+        return situation.isNotEmpty() && emotion.isNotEmpty() && intensity >= 0
     }
 
-
-    fun toTemplate(): String? {
-        if (!isValid()) return null
-        return """
-            날짜 $date
-            상황: $situation
-            감정: $emotion
-            강도: $intensity
-            생각: $thought
-            행동: $behavior
-            """
-    }
     fun getDate(): LocalDate {
         return date
     }

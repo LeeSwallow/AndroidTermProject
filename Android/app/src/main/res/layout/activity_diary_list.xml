@@ -64,7 +64,7 @@
                 android:background="@color/historyCardBackground"
                 android:gravity="center">
                 <ImageButton
-                    android:id="@+id/btnNextMonth"
+                    android:id="@+id/btnPrevMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -79,7 +79,7 @@
                     android:textStyle="bold"
                     android:layout_marginHorizontal="16dp"/>
                 <ImageButton
-                    android:id="@+id/btnPrevMonth"
+                    android:id="@+id/btnNextMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -116,7 +116,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <Button
-        android:id="@+id/btnSaveResponse"
+        android:id="@+id/btnLoadJson"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"

@@ -1,14 +1,10 @@
 package com.pnu.aidbtdiary.helper
 
 import android.content.Context
-import android.os.SystemClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.tensorflow.lite.support.label.Category
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.text.nlclassifier.BertNLClassifier
-import org.tensorflow.lite.task.text.nlclassifier.NLClassifier
-import java.util.concurrent.ScheduledThreadPoolExecutor
 
 class TextClassificationHelper(
     val context: Context,
@@ -32,7 +28,7 @@ class TextClassificationHelper(
 
     suspend fun classify(text: String): Boolean {
         val results = withContext(Dispatchers.IO) {
-            bertClassifier.classify(text)
+            bertClassifier.classify(text.trim())
         }
         return results[1].score > results[0].score
     }
