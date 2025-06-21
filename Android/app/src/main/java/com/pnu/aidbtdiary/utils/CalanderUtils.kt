@@ -27,8 +27,8 @@ object CalendarUtils {
             else {
                 val hasDiary = true
                 val sentimentType: Sentiment? = when (diary.sentiment) {
-                    true -> Sentiment.POSITIVE
-                    false -> Sentiment.NEGATIVE
+                    true -> Sentiment.NEGATIVE
+                    false -> Sentiment.POSITIVE
                 }
                 days.add(DiaryDay(date, hasDiary, sentimentType))
             }

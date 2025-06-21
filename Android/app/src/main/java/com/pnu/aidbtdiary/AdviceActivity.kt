@@ -93,11 +93,15 @@ class AdviceActivity : BaseActivity() {
             dbtDiaryForm.solution = userResponse
 
             lifecycleScope.launch {
-                // 감정 분석 로직 (영어/한국어 처리)
-                analyzeSentiment(dbtDiaryForm)
-                // DB에 저장
-                dao.insert(dbtDiaryForm.toEntity())
-                Toast.makeText(applicationContext, "DBT 일기가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                try {
+                    analyzeSentiment(dbtDiaryForm)
+                    dao.insert(dbtDiaryForm.toEntity())
+                    Toast.makeText(applicationContext, "DBT 일기가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(applicationContext, "DBT 일기 저장 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                } finally {
+                    binding.btnSaveResponse.isEnabled = true
+                }
                 finish()
             }
         }
@@ -121,12 +125,14 @@ class AdviceActivity : BaseActivity() {
                             toast.show()
                             translationHelper.downloadModel()
                             toast.cancel()
+                            toast.setText("번역 모델 다운로드 완료")
                             textClassificationHelper.classify(text)
                         }
                         ResponseType.CANCEL -> emotionAdapter.getSentimentByEmotion(form.emotion)
                         ResponseType.CLOSE -> return
                     }
                 } else textClassificationHelper.classify(text)
+
             }
             else -> emotionAdapter.getSentimentByEmotion(form.emotion)
         }

@@ -54,6 +54,7 @@
                 android:layout_marginStart="36dp"
                 android:layout_toEndOf="@id/ivEntryIcon"
                 android:text="오늘의 감정 카드 작성"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -99,6 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="58dp"
                 android:layout_toEndOf="@id/ivHistoryIcon"
+                android:textColor="@color/black"
                 android:text="일기 조회하기"
                 android:textSize="20sp"
                 android:textStyle="bold" />

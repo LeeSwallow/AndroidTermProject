@@ -1,9 +1,12 @@
 package com.pnu.aidbtdiary.helper
 
 import android.app.DownloadManager
+import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pnu.aidbtdiary.entity.DbtDiary
@@ -11,6 +14,7 @@ import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
+import java.io.OutputStream
 import java.time.LocalDateTime
 
 class FsHelper(private val context: Context) {
@@ -40,22 +44,39 @@ class FsHelper(private val context: Context) {
         return file
     }
 
-    fun downloadDbtDiaryToJson(diaries: List<DbtDiary>) {
-        val jsonUri = exportDbtDiaryListToJson(diaries)
-        if (jsonUri == null) {
-            throw Exception("DBT Diary 데이터를 JSON으로 변환하는 데 실패했습니다.")
+    fun downloadDbtDiaryToJson(diaries: List<DbtDiary>, onResult: (Boolean, String) -> Unit = { _, _ -> }) {
+        val gson = Gson()
+        val wrapper = DbtDiaryListWrapper(diaries)
+        val jsonString = gson.toJson(wrapper)
+        val fileName = "export_" + LocalDateTime.now().toString().replace(":", "-") + ".json"
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+                val resolver = context.contentResolver
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+                    put(MediaStore.Downloads.MIME_TYPE, "application/json")
+                }
+                val collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                val itemUri = resolver.insert(collection, contentValues)
+                if (itemUri != null) {
+                    resolver.openOutputStream(itemUri)?.use { outputStream ->
+                        outputStream.write(jsonString.toByteArray())
+                        outputStream.flush()
+                    }
+                    onResult(true, "다운로드가 완료되었습니다: $fileName")
+                } else {
+                    onResult(false, "파일을 저장할 수 없습니다.")
+                }
+            } else {
+                // Android 12 이하: 기존 방식
+                val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
+                FileOutputStream(file).use { it.write(jsonString.toByteArray()) }
+                onResult(true, "다운로드가 완료되었습니다: $fileName")
+            }
+        } catch (e: Exception) {
+            onResult(false, "저장 중 오류 발생: ${e.localizedMessage}")
         }
-
-        val request = DownloadManager.Request(jsonUri)
-            .setTitle("DBT Diary Export")
-            .setDescription("DBT Diary 데이터를 JSON으로 내보냅니다.")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, jsonUri.lastPathSegment)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setMimeType("application/json")
-
-        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        dm.enqueue(request)
-
     }
 
     fun importDbtDiaryListFromJson(
@@ -76,3 +97,4 @@ class FsHelper(private val context: Context) {
         }
     }
 }
+

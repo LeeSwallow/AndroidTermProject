@@ -10,8 +10,13 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.pnu.aidbtdiary.BaseActivity
+import com.pnu.aidbtdiary.dao.DbtDiaryDao
 import com.pnu.aidbtdiary.databinding.ActivityThemeBinding
+import com.pnu.aidbtdiary.entity.DbtDiary
+import com.pnu.aidbtdiary.helper.AppDatabaseHelper
+import com.pnu.aidbtdiary.helper.FsHelper
 import com.pnu.aidbtdiary.helper.SyncHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,6 +29,8 @@ class ThemeActivity : BaseActivity() {
     private val KEY_URI   = "theme_image_uri"
     private val PICK_IMAGE_REQUEST = 100
     private lateinit var syncHelper: SyncHelper
+    private lateinit var downloadHelper: FsHelper
+    private lateinit var dao : DbtDiaryDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +41,8 @@ class ThemeActivity : BaseActivity() {
 
         // SyncHelper 초기화
         syncHelper = SyncHelper(this)
+        downloadHelper = FsHelper(this)
+        dao = AppDatabaseHelper.getDatabase(this).dbtDiaryDao()
 
         // 뒤로 가기
         binding.btnBack.setOnClickListener { finish() }
@@ -66,6 +75,13 @@ class ThemeActivity : BaseActivity() {
         binding.btnSyncCloud.setOnClickListener {
             GlobalScope.launch(Dispatchers.IO) {
                 syncHelper.syncDiaries()
+            }
+        }
+
+        binding.btnDownloadJson.setOnClickListener {
+            lifecycleScope.launch {
+                val dbtList: List<DbtDiary> = dao.getAll()
+                downloadHelper.downloadDbtDiaryToJson(dbtList)
             }
         }
     }

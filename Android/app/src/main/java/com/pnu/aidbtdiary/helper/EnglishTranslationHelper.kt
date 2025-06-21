@@ -26,7 +26,7 @@ class EnglishTranslationHelper {
     suspend fun downloadModel() {
         val model = getModel()
         val conditions = DownloadConditions.Builder()
-            .requireWifi()
+//            .requireWifi()
             .build()
         modelManager.download(model, conditions).await()
     }
