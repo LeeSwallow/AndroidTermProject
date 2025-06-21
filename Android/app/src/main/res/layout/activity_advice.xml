@@ -36,9 +36,9 @@
 
     <ImageButton
         android:id="@+id/btnVoice"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="164dp"
+        android:layout_width="42dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="172dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="소리"
         android:src="@drawable/ic_sound"

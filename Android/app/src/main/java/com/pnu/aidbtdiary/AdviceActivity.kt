@@ -13,8 +13,10 @@ import com.pnu.aidbtdiary.databinding.ActivityAdviceBinding
 import com.pnu.aidbtdiary.dto.DbtDiaryForm
 import com.pnu.aidbtdiary.helper.AppDatabaseHelper
 import com.pnu.aidbtdiary.helper.EnglishTranslationHelper
+import com.pnu.aidbtdiary.helper.PlayAudioHelper
 import com.pnu.aidbtdiary.helper.PromptTemplateHelper
 import com.pnu.aidbtdiary.helper.TextClassificationHelper
+import com.pnu.aidbtdiary.network.GeminiClient
 import com.pnu.aidbtdiary.network.OpenAiClient
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -30,15 +32,19 @@ class AdviceActivity : BaseActivity() {
     private lateinit var toast: Toast
     private lateinit var translationHelper: EnglishTranslationHelper
     private lateinit var openAiClient: OpenAiClient
+    private lateinit var geminiClient: GeminiClient
+    private lateinit var playAudioHelper: PlayAudioHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdviceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btnVoice.isEnabled = false
 
         // DB 초기화
         db = AppDatabaseHelper.getDatabase(this)
         dao = db.dbtDiaryDao()
+        playAudioHelper = PlayAudioHelper(this)
 
         // 헬퍼 및 어댑터 초기화
         textClassificationHelper = TextClassificationHelper(this)
@@ -70,18 +76,40 @@ class AdviceActivity : BaseActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) { /* no-op */ }
         }
 
+
         // AI 조언 받기 버튼
         binding.btnGetAdvice.setOnClickListener {
             binding.tvAdviceContent.text = "AI 조언을 가져오는 중..."
-            if (!::openAiClient.isInitialized) openAiClient = OpenAiClient()
+            if (!::openAiClient.isInitialized) geminiClient = GeminiClient()
             lifecycleScope.launch {
                 try {
                     binding.btnGetAdvice.isEnabled = false
-                    val advice = getAdviceFromOpenAI(dbtDiaryForm)
+                    val advice = getAdviceFromGemini(dbtDiaryForm)
                     binding.tvAdviceContent.text = advice
                 } catch (e: Exception) {
                     binding.tvAdviceContent.text = "AI 조언을 가져오는 데 실패했습니다: ${e.message}"
                     binding.btnGetAdvice.isEnabled = true
+                }
+            }
+        }
+
+        binding.btnVoice.setOnClickListener {
+            lifecycleScope.launch {
+                if (playAudioHelperIsPlaying()) {
+                    playAudioHelper.stop()
+                    return@launch
+                }
+                val adviceText = binding.tvAdviceContent.text.toString()
+                if (adviceText.isNotBlank()) {
+                    try {
+                        if (!::openAiClient.isInitialized) openAiClient = OpenAiClient()
+                        val responseBody = openAiClient.getSpeechStream(adviceText)
+                        playAudioHelper.playStream(responseBody, sampleRate = 24000)
+                    } catch (e: Exception) {
+                        Toast.makeText(this@AdviceActivity, "음성 재생 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@AdviceActivity, "먼저 AI 조언을 받아주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -170,9 +198,26 @@ class AdviceActivity : BaseActivity() {
             ?: "AI 조언을 가져오는 데 실패했습니다."
     }
 
+    private suspend fun getAdviceFromGemini(form: DbtDiaryForm): String {
+        if (!form.isValid()) return "입력된 정보가 유효하지 않습니다."
+        val req = PromptTemplateHelper.generatorGeminiRequest(form)
+        binding.btnVoice.isEnabled = true
+        return geminiClient.getCompletion(req).getResponseText()
+    }
+
     private fun initDebug() {
         binding.etUserResponse.setText(
             "상대방의 마음을 이해하려고 노력했어요."
         )
+    }
+
+    private fun playAudioHelperIsPlaying(): Boolean {
+        return try {
+            val field = playAudioHelper.javaClass.getDeclaredField("isPlaying")
+            field.isAccessible = true
+            field.get(playAudioHelper) as Boolean
+        } catch (e: Exception) {
+            false
+        }
     }
 }
