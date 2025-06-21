@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "mcp-dbtdiary":  {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "D:\\Univ\\term_project\\AndroidTermProject\\BE",
+                "run",
+                "local_server.py"
+            ]
+        }
+    }
+}
