@@ -41,6 +41,12 @@ class CalendarAdapter(
                 itemView.isClickable = false
             } else {
                 tvDay.text = day.date.dayOfMonth.toString()
+                // 일요일(일)만 검은색으로 표시
+                if (day.date.dayOfWeek.value % 7 == 0) {
+                    tvDay.setTextColor(itemView.context.getColor(android.R.color.black))
+                } else {
+                    tvDay.setTextColor(itemView.context.getColor(android.R.color.primary_text_light))
+                }
                 if (!day.hasDiary) {
                     tvDay.setBackgroundResource(R.drawable.bg_day_default)
                 } else {
@@ -56,3 +62,4 @@ class CalendarAdapter(
         }
     }
 }
+
