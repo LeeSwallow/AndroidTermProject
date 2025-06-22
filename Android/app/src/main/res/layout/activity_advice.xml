@@ -29,12 +29,26 @@
                 android:src="@drawable/ic_arrow_back" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="AI 조언 요청:"
                 android:layout_margin="5dp"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
+
+            <Button
+                android:layout_marginLeft="90dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/entryCardBackground"
+                android:id="@+id/btnTest1"
+                />
+            <Button
+                android:layout_marginLeft="40dp"
+                android:layout_width="40dp"
+                android:backgroundTint="@color/historyCardBackground"
+                android:layout_height="40dp"
+                android:id="@+id/btnTest2"/>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

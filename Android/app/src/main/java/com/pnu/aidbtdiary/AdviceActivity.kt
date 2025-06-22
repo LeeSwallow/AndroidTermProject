@@ -1,6 +1,7 @@
 package com.pnu.aidbtdiary
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -50,7 +51,6 @@ class AdviceActivity : BaseActivity() {
         emotionAdapter = EmotionAdapter(this)
         toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
 
-        initDebug()
 
         val dbtDiaryForm = getDbtFormFromIntent()
 
@@ -90,25 +90,39 @@ class AdviceActivity : BaseActivity() {
         }
 
         binding.btnVoice.setOnClickListener {
+            // 버튼 여러 번 클릭 방지
+            binding.btnVoice.isEnabled = false
+
             lifecycleScope.launch {
-                if (playAudioHelperIsPlaying()) {
-                    playAudioHelper.stop()
-                    return@launch
-                }
-                val adviceText = binding.tvAdviceContent.text.toString()
-                if (adviceText.isNotBlank()) {
-                    try {
-                        if (!::openAiClient.isInitialized) openAiClient = OpenAiClient()
-                        val responseBody = openAiClient.getSpeechStream(adviceText)
-                        playAudioHelper.playStream(responseBody, sampleRate = 24000)
-                    } catch (e: Exception) {
-                        Toast.makeText(this@AdviceActivity, "음성 재생 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                try {
+                    // 이미 재생 중이면 정지
+                    if (playAudioHelper.isPlaying()) {
+                        playAudioHelper.stop()
+                        return@launch
                     }
-                } else {
-                    Toast.makeText(this@AdviceActivity, "먼저 AI 조언을 받아주세요.", Toast.LENGTH_SHORT).show()
+
+                    val adviceText = binding.tvAdviceContent.text.toString()
+                    if (adviceText.isBlank()) {
+                        Toast.makeText(this@AdviceActivity, "먼저 AI 조언을 받아주세요.", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+
+                    // OpenAiClient 초기화
+                    if (!::openAiClient.isInitialized) openAiClient = OpenAiClient()
+
+                    // 음성 스트림 받아서 재생
+                    val responseBody = openAiClient.getSpeechStream(adviceText)
+                    playAudioHelper.playStream(responseBody, sampleRate = 24000)
+                } catch (e: Exception) {
+                    Log.e("AdviceActivity", "음성 재생 실패: ${e.message}")
+                    Toast.makeText(this@AdviceActivity, "음성 재생에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                } finally {
+                    binding.btnVoice.isEnabled = true
                 }
             }
         }
+        binding.btnTest1.setOnClickListener { testInit1() }
+        binding.btnTest2.setOnClickListener { testInit2() }
 
         // 내 대응 저장 버튼
         binding.btnSaveResponse.setOnClickListener {
@@ -200,11 +214,21 @@ class AdviceActivity : BaseActivity() {
         return geminiClient.getCompletion(req).getResponseText()
     }
 
-    private fun initDebug() {
+    private fun testInit1() {
         binding.etUserResponse.setText(
-            "상대방의 마음을 이해하려고 노력했어요."
+            "오늘같은 값진 날을 기억할 수 있도록 블로그를 남겼어요."
         )
+        binding.spinnerDbtSkills.setSelection(0)
     }
+
+    private fun testInit2() {
+        binding.etUserResponse.setText(
+            "오늘은 힘든 날이었지만, 다음에는 더 잘할 수 있을 거예요."
+        )
+        binding.spinnerDbtSkills.setSelection(1)
+    }
+
+
     private fun playAudioHelperIsPlaying(): Boolean {
         return try {
             val field = playAudioHelper.javaClass.getDeclaredField("isPlaying")

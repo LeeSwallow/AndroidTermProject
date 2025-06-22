@@ -26,7 +26,7 @@ class DiaryListActivity : BaseActivity() {
             fsHelper.importDbtDiaryListFromJson(this, uri, onSuccess = { diaries ->
                 lifecycleScope.launch {
                     fsHelper.syncToLocal(diaries, onSuccess = {
-                        Toast.makeText(this@DiaryListActivity, "파일 읽기 성공: ${diaries.size}개의 일기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@DiaryListActivity, "파일 읽기 성공: ${diaries.size}개의 일기가 동기화 되었습니다.", Toast.LENGTH_SHORT).show()
                         loadCalendar() // 새로고침
                     }, onError = {
                         Toast.makeText(this@DiaryListActivity, "파일 읽기 실패: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
