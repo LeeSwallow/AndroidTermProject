@@ -42,23 +42,18 @@ class AdviceActivity : BaseActivity() {
         binding.btnVoice.isEnabled = false
         setSupportActionBar(binding.toolbar)
 
-        // DB 초기화
         db = AppDatabaseHelper.getDatabase(this)
         dao = db.dbtDiaryDao()
         playAudioHelper = PlayAudioHelper(this)
 
-        // 헬퍼 및 어댑터 초기화
         textClassificationHelper = TextClassificationHelper(this)
         emotionAdapter = EmotionAdapter(this)
         toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
 
-        // Debug용 초기 텍스트
         initDebug()
 
-        // Intent로부터 폼 가져오기
         val dbtDiaryForm = getDbtFormFromIntent()
 
-        // Spinner: DBT 스킬 목록 어댑터 설정
         ArrayAdapter.createFromResource(
             this,
             R.array.dbt_skill_prompt,
@@ -191,7 +186,6 @@ class AdviceActivity : BaseActivity() {
                 .setOnCancelListener { cont.resume(ResponseType.CLOSE, null) }
                 .show()
         }
-
     private suspend fun getAdviceFromOpenAI(form: DbtDiaryForm): String {
         if (!form.isValid()) return "입력된 정보가 유효하지 않습니다."
         val req = PromptTemplateHelper.generateCompletionRequest(form)
@@ -199,7 +193,6 @@ class AdviceActivity : BaseActivity() {
             ?.choices?.firstOrNull()?.message?.content
             ?: "AI 조언을 가져오는 데 실패했습니다."
     }
-
     private suspend fun getAdviceFromGemini(form: DbtDiaryForm): String {
         if (!form.isValid()) return "입력된 정보가 유효하지 않습니다."
         val req = PromptTemplateHelper.generatorGeminiRequest(form)

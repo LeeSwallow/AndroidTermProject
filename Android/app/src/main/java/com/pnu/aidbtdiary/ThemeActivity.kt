@@ -70,8 +70,14 @@ class ThemeActivity : BaseActivity() {
 
         // 클라우드 동기화
         binding.btnSyncCloud.setOnClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                runOnUiThread {
+                    Toast.makeText(this@ThemeActivity, "동기화 중...", Toast.LENGTH_SHORT).show()
+                }
                 syncHelper.syncDiaries()
+                runOnUiThread {
+                    Toast.makeText(this@ThemeActivity, "동기화 완료", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

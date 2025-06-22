@@ -1,8 +1,5 @@
 package com.pnu.aidbtdiary.helper
 
-import android.adservices.ondevicepersonalization.ModelManager
-import android.content.Context
-import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -26,7 +23,6 @@ class EnglishTranslationHelper {
     suspend fun downloadModel() {
         val model = getModel()
         val conditions = DownloadConditions.Builder()
-//            .requireWifi()
             .build()
         modelManager.download(model, conditions).await()
     }

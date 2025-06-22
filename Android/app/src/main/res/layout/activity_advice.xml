@@ -96,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="로딩 중..." />
+                    android:hint="'조언 받기' 버튼 클릭 시 응답"/>
             </ScrollView>
 
                 <Button
